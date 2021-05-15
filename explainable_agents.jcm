@@ -1,0 +1,19 @@
+/*
+    Created by: Débora Engelmann
+	August 13, 2020
+*/
+
+mas explainable_agents {
+
+    agent aloc_agent:aloc_agent.asl{
+    	focus: integration, aloc
+    }
+    
+	workspace wp{
+        artifact aloc:br.pucrs.smart.FStoreArtifact
+		artifact integration:br.pucrs.smart.IntegrationArtifact
+	}
+	
+	platform: br.pucrs.smart.RestArtifact("--main 2181 --restPort 8080")
+
+}

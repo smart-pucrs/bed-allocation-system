@@ -1,0 +1,143 @@
+set PACIENTE;
+
+param tipoDeEncaminhamento{p in PACIENTE} integer;
+param genero{p in PACIENTE} integer;
+
+
+/***************************************************
+* Quarto 100
+* Leitos:	100a	100c	100b	
+***************************************************/
+var Q100{p in PACIENTE} binary;
+/* max 3 leitos */
+s.t. Q100_max: sum {p in PACIENTE} Q100[p] <= 3;
+
+/* genero igual */
+s.t. Q100_genero{p1 in PACIENTE, p2 in PACIENTE}:
+	(Q100[p1]+Q100[p2])+(abs(genero[p1]-genero[p2])/2) <= 2;
+
+
+
+/***************************************************
+* Quarto 112
+* Leitos:	112a	112d	112c	112b	
+***************************************************/
+var Q112{p in PACIENTE} binary;
+/* max 4 leitos */
+s.t. Q112_max: sum {p in PACIENTE} Q112[p] <= 4;
+
+/* genero igual */
+s.t. Q112_genero{p1 in PACIENTE, p2 in PACIENTE}:
+	(Q112[p1]+Q112[p2])+(abs(genero[p1]-genero[p2])/2) <= 2;
+
+/* tipoDeEncaminhamento nao _NONE */
+s.t. Q112_tipoDeEncaminhamento{p in PACIENTE}:
+	(Q112[p]) - abs(tipoDeEncaminhamento[p]-2) <= 0;
+
+
+
+/***************************************************
+* Quarto 113
+* Leitos:	113b	113a	
+***************************************************/
+var Q113{p in PACIENTE} binary;
+/* max 2 leitos */
+s.t. Q113_max: sum {p in PACIENTE} Q113[p] <= 2;
+
+/* genero igual */
+s.t. Q113_genero{p1 in PACIENTE, p2 in PACIENTE}:
+	(Q113[p1]+Q113[p2])+(abs(genero[p1]-genero[p2])/2) <= 2;
+
+
+
+/***************************************************
+* Quarto 114
+* Leitos:	114a	114b	
+***************************************************/
+var Q114{p in PACIENTE} binary;
+/* max 2 leitos */
+s.t. Q114_max: sum {p in PACIENTE} Q114[p] <= 2;
+
+/* genero igual */
+s.t. Q114_genero{p1 in PACIENTE, p2 in PACIENTE}:
+	(Q114[p1]+Q114[p2])+(abs(genero[p1]-genero[p2])/2) <= 2;
+
+
+
+/***************************************************
+* Quarto 115
+* Leitos:	115b	115c	115a	
+***************************************************/
+var Q115{p in PACIENTE} binary;
+/* max 3 leitos */
+s.t. Q115_max: sum {p in PACIENTE} Q115[p] <= 3;
+
+/* genero igual */
+s.t. Q115_genero{p1 in PACIENTE, p2 in PACIENTE}:
+	(Q115[p1]+Q115[p2])+(abs(genero[p1]-genero[p2])/2) <= 2;
+
+
+
+/***************************************************
+* Quarto 116
+* Leitos:	116b	116c	116a	
+***************************************************/
+var Q116{p in PACIENTE} binary;
+/* max 3 leitos */
+s.t. Q116_max: sum {p in PACIENTE} Q116[p] <= 3;
+
+/* genero igual */
+s.t. Q116_genero{p1 in PACIENTE, p2 in PACIENTE}:
+	(Q116[p1]+Q116[p2])+(abs(genero[p1]-genero[p2])/2) <= 2;
+
+
+
+/***************************************************
+* Quarto 117
+* Leitos:	117e	117a	117c	117b	117d	
+***************************************************/
+var Q117{p in PACIENTE} binary;
+/* max 5 leitos */
+s.t. Q117_max: sum {p in PACIENTE} Q117[p] <= 5;
+
+/* genero igual */
+s.t. Q117_genero{p1 in PACIENTE, p2 in PACIENTE}:
+	(Q117[p1]+Q117[p2])+(abs(genero[p1]-genero[p2])/2) <= 2;
+
+
+
+/***************************************************
+* Pacientes sem leito
+***************************************************/
+var reserva{p in PACIENTE} binary;
+
+/* garante que o paciente so esta em um quarto */
+s.t. pacienteQuarto{p in PACIENTE}: Q100[p] + Q112[p] + Q113[p] + Q114[p] + Q115[p] + Q116[p] + Q117[p] + reserva[p] == 1;
+
+/* move no maximo 0 pacientes ja alocados */
+s.t. lim_mov: Q112['P23433454353'] + Q112['P34343434324'] + Q113['P23266656502'] + Q115['P32135131355'] + Q116['P23102103133'] >= 5;
+
+
+/***************************************************
+* Criterios
+***************************************************/
+/* maximiza o numero de pacientes em leitos com peso 0.7*/
+maximize max_leitos: (0.7*(0.0*(0.7*Q100['P93092302930'] + 2.0*Q112['P93092302930'] + 3.0*Q113['P93092302930'] + 1.0*Q114['P93092302930'] + 1.5*Q115['P93092302930'] + 0.1*Q116['P93092302930'] + 0.5*Q117['P93092302930']) + 0.7*(0.7*Q100['P23102103133'] + 2.0*Q112['P23102103133'] + 3.0*Q113['P23102103133'] + 1.0*Q114['P23102103133'] + 1.5*Q115['P23102103133'] + 0.1*Q116['P23102103133'] + 0.5*Q117['P23102103133']) + 0.0*(0.7*Q100['P34343434324'] + 2.0*Q112['P34343434324'] + 3.0*Q113['P34343434324'] + 1.0*Q114['P34343434324'] + 1.5*Q115['P34343434324'] + 0.1*Q116['P34343434324'] + 0.5*Q117['P34343434324']) + 3.1*(0.7*Q100['P23433454353'] + 2.0*Q112['P23433454353'] + 3.0*Q113['P23433454353'] + 1.0*Q114['P23433454353'] + 1.5*Q115['P23433454353'] + 0.1*Q116['P23433454353'] + 0.5*Q117['P23433454353']) + 1.5*(0.7*Q100['P23266656502'] + 2.0*Q112['P23266656502'] + 3.0*Q113['P23266656502'] + 1.0*Q114['P23266656502'] + 1.5*Q115['P23266656502'] + 0.1*Q116['P23266656502'] + 0.5*Q117['P23266656502']) + 1.1*(0.7*Q100['P32135131355'] + 2.0*Q112['P32135131355'] + 3.0*Q113['P32135131355'] + 1.0*Q114['P32135131355'] + 1.5*Q115['P32135131355'] + 0.1*Q116['P32135131355'] + 0.5*Q117['P32135131355']) + 0.0*(0.7*Q100['P09090909091'] + 2.0*Q112['P09090909091'] + 3.0*Q113['P09090909091'] + 1.0*Q114['P09090909091'] + 1.5*Q115['P09090909091'] + 0.1*Q116['P09090909091'] + 0.5*Q117['P09090909091']))) - (0.3*(sum{p in PACIENTE} reserva[p]));
+
+
+
+/***************************************************
+* Output
+***************************************************/
+solve;
+
+display Q100;
+display Q112;
+display Q113;
+display Q114;
+display Q115;
+display Q116;
+display Q117;
+display reserva;
+
+end;
