@@ -1,4 +1,4 @@
-# Explainable Agents
+# Bed Allocation System
 
 By [Débora C. Engelmann](https://github.com/DeboraEngelmann),
 [Lucca Dornelles Cezar](https://github.com/rukndf),
