@@ -95,7 +95,7 @@ public class FStore extends DBConnect{
 			String quartoNam = leito.getString("quarto");
 			String leitoNam = leito.getString("numero");
 			//%fix%
-			float valorCuidado = Float.parseFloat(String.valueOf(leito.get("valorCuidado")));
+			float valorCuidado = 1000 - Float.parseFloat(String.valueOf(leito.get("dist")));
 			
 			Quarto quartoObj;
 			//adiciona leito ao quarto existente

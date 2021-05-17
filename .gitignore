@@ -22,6 +22,10 @@ build
 .stop___MAS
 *~
 
+# temp files
+*.pddl
+*.dom
+
 # key file
 src/resources/explainable-agent-d4391ab8fb68.json
 eexplainable-agent-firebase-adminsdk-u4w9g-4d5281c4dc.json

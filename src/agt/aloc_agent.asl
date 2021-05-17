@@ -1,4 +1,4 @@
-!responder(ResponseId, "Aloc", Params, Contexts).
+//!responder(ResponseId, "Aloc", Params, Contexts).
 
 +request(Origin, ResponseId, IntentName, Params, Contexts)
 	:true

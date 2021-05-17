@@ -4,22 +4,32 @@
 	(:types
 		paciente
 		leito
-		tipoDeEncaminhamento
 		genero
+		tipoDeEncaminhamento
 	)
 
 	(:predicates 
 		(in ?paciente - paciente ?leito - leito)
 		(ocupado ?leito - leito)
 		(alocado ?paciente - paciente)
+		(genero-Masculino ?paciente - paciente)
+		(genero-Feminino ?paciente - paciente)
 		(tipoDeEncaminhamento-Eletivo ?paciente - paciente)
 		(tipoDeEncaminhamento-Agudo ?paciente - paciente)
 		(tipoDeEncaminhamento-_NONE ?paciente - paciente)
-		(genero-Masculino ?paciente - paciente)
-		(genero-Feminino ?paciente - paciente)
 	)
 
 	(:action aloc-Neurologia 
+		:parameters (?paciente - paciente ?leito - leito ?genero-paciente - genero ?genero-leito - genero)
+		:precondition (and (not (alocado ?paciente))
+			(not (ocupado ?leito))
+			(= ?genero-paciente ?genero-leito))
+		:effect (and (in ?paciente ?leito)
+			(ocupado ?leito)
+			(alocado ?paciente))
+	)
+
+	(:action aloc-1 
 		:parameters (?paciente - paciente ?leito - leito ?genero-paciente - genero ?genero-leito - genero)
 		:precondition (and (not (alocado ?paciente))
 			(not (ocupado ?leito))
