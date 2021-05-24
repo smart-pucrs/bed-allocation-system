@@ -27,3 +27,9 @@ You will find all the necessary documentation in our [Wiki](https://github.com/s
 - FStoreArtifact.java 
 
   Artefato que gerencia as operações do agente com o objeto FStore 
+
+## To run this project you need
+
+- Java 11
+- Gradle 6.8.3
+- JaCaMo  0.9
