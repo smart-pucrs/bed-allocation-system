@@ -19,7 +19,8 @@ mas bed_allocation_agents {
     
     
 	agent validator:validator.asl{
-    	focus: aloc
+    	focus: pddl
+    	beliefs: domainFile("src/resources/domain.pddl"), problemFile("src/resources/problem.pddl"), planFile("src/resources/plan.pddl"), outFile("src/resources/output.tex")
     }
 
 	agent operator:communication_specialist.asl{
@@ -34,6 +35,7 @@ mas bed_allocation_agents {
         artifact aloc:br.pucrs.smart.FStoreArtifact
 		artifact integration:br.pucrs.smart.IntegrationArtifact
 		artifact database:br.pucrs.smart.DatabaseArtifact("src/resources/explainable-agent-d4391ab8fb68.json")
+		artifact pddl:br.pucrs.smart.val.validatorArtifact()
 	}
 	
 	platform: br.pucrs.smart.RestArtifact("--main 2181 --restPort 8080")

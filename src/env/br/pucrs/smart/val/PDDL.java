@@ -159,7 +159,7 @@ public class PDDL{
 	/****************************************************
 	* 			PLAN
 	****************************************************/
-	public static String template = "template"; //template file
+	public static String template = "src/resources/template"; //template file
 	public static String domainFile;
 	public static String problemFile;
 	public static String planFile;
@@ -169,6 +169,9 @@ public class PDDL{
 		plan.add(act);
 	}
 	
+	public boolean hasPlan(){
+		return (plan.size()>0);
+	}
 	
 	//fixes case
 	public void fixPlanCase(){
@@ -223,12 +226,14 @@ public class PDDL{
 	
 	public Object[] tryPlan(boolean print){
 		Object[] resp = null;
+		//TEMP
 		for(int pLen = 0; pLen < plan.size(); pLen++){
 			resp = tryAct(pLen, print);
 			if(resp != null) return resp;
 		}
 		return resp;
 	}
+	
 	public List<Object[]> tryPlanForce(boolean print){
 		List<Object[]> resp = new ArrayList<Object[]>();
 		for(int pLen = 0; pLen < plan.size(); pLen++){
@@ -238,8 +243,7 @@ public class PDDL{
 			}
 		}
 		return resp;
-	}
-	
+	}	
 	
 	public void valOut(String outN){
 		try{
