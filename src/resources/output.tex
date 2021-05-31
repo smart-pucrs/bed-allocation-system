@@ -1,0 +1,108 @@
+%% Modified Full length research paper template
+%% Original created by Simon Hengchen and Nilo Pedrazzini for the Journal of Open Humanities Data (https://openhumanitiesdata.metajnl.com)
+%% https://creativecommons.org/licenses/by/4.0/legalcode
+
+
+\documentclass{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\setlength{\paperwidth}{21cm}   % A4
+\setlength{\paperheight}{29.7cm}% A4
+\setlength\topmargin{-0.5cm}    
+\setlength\oddsidemargin{0cm}   
+\setlength\textheight{24.7cm} 
+\setlength\textwidth{16.0cm}
+\setlength\columnsep{0.6cm}  
+\newlength\titlebox 
+\setlength\titlebox{5cm}
+\setlength\headheight{5pt}   
+\setlength\headsep{0pt}
+\pagestyle{plain}
+\usepackage{color}
+\usepackage[natbibapa]{apacite}
+\usepackage{xurl}
+\usepackage[colorlinks,citecolor=blue,urlcolor=blue, linkcolor=blue, bookmarks=false,hypertexnames=true]{hyperref}
+\usepackage{url}
+\usepackage{float}
+\usepackage{graphicx}
+%\usepackage{libertine}
+\usepackage{endnotes}
+\let\footnote=\endnote
+\usepackage{doi} % hyperlink URLs
+\renewcommand{\doi}{DOI:~}
+
+\newcommand\outauthor{
+	\begin{tabular}[t]{c}
+		\bf\@author
+	\end{tabular}}
+	
+%Add keyword command
+\providecommand{\keywords}[1]
+{\small\textbf{Keywords:} #1
+}
+
+\providecommand{\authorroles}[1]
+{\small\textbf{Author roles:} #1
+}
+
+\title{\textbf{PDDL Plan Validator}\\Validation Report}
+
+\date{} %leave blank
+
+\begin{document}
+
+\maketitle
+
+\section{Domain}
+\textbf{Domain:}  hospital\\
+\textbf{Problem:} aloc
+
+\subsection{Files}
+\textbf{Domain file:}  src/resources/domain.pddl \\
+\textbf{Problem file:} src/resources/problem.pddl\\
+\textbf{Plan file:}    src/resources/plan.pddl
+
+\section{Plan}
+
+\begin{itemize}
+    \item[1.] (\textbf{aloc-1} 93092302930 110a genero--Masculino genero--Masculino)
+    \item[2.] (\textbf{aloc-1} 09090909091 110b genero--Masculino genero--Masculino)
+    \item[3.] (\textbf{aloc-1} 23433454353 112a genero--Feminino genero--Feminino)
+    \item[4.] (\textbf{aloc-1} 34343434324 112d genero--Feminino genero--Feminino)
+\end{itemize}
+
+\section{Validation}
+
+\begin{itemize}
+\item[1.] (\textbf{aloc-1} 93092302930 110a genero--Masculino genero--Masculino)
+\begin{itemize}
+	\item[\textbullet] +(\textit{alocado} 93092302930)
+	\item[\textbullet] +(\textit{ocupado} 110a)
+	\item[\textbullet] +(\textit{in} 93092302930 110a)
+\end{itemize}
+\item[2.] (\textbf{aloc-1} 09090909091 110b genero--Masculino genero--Masculino)
+\begin{itemize}
+	\item[\textbullet] +(\textit{alocado} 09090909091)
+	\item[\textbullet] +(\textit{ocupado} 110b)
+	\item[\textbullet] +(\textit{in} 09090909091 110b)
+\end{itemize}
+\item[3.] (\textbf{aloc-1} 23433454353 112a genero--Feminino genero--Feminino)
+\begin{itemize}
+	\item[\textbullet] +(\textit{alocado} 23433454353)
+	\item[\textbullet] +(\textit{ocupado} 112a)
+	\item[\textbullet] +(\textit{in} 23433454353 112a)
+\end{itemize}
+\item[4.] (\textbf{aloc-1} 34343434324 112d genero--Feminino genero--Feminino)
+\begin{itemize}
+	\item[\textbullet] +(\textit{alocado} 34343434324)
+	\item[\textbullet] +(\textit{ocupado} 112d)
+	\item[\textbullet] +(\textit{in} 34343434324 112d)
+\end{itemize}
+\end{itemize}
+
+\hline
+\vspace{10pt}
+\large \textbf{Goal not achieved}
+
+\end{document}
