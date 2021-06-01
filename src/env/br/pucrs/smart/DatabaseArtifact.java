@@ -36,6 +36,7 @@ public class DatabaseArtifact extends Artifact {
 			FirebaseApp.initializeApp(options);
 
 			db = FirestoreClient.getFirestore();
+			PddlBuilder pddlBuilder = new PddlBuilder(db);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
