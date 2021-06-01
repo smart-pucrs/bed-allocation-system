@@ -44,43 +44,6 @@ public class DBConnect {
 	
 	//simbolo de caracteristica que precisa ser igual
 	String EQUALS;
-	
-	//%PLACEHOLDER%
-	public void tests(){
-		PDDL test = Parser.parseDomain("domain.pddl");
-		//test.printDomain();
-		Parser.parseProblem(test, "problem.pddl");
-		Parser.parsePlan(test, "plan.pddl");
-		List<Object[]> out = test.tryPlanForce(false);
-		for(Object[] o : out){			
-			System.out.print("Error in action \"( " );
-			for(String s : (String[])o[0]) System.out.print(s + " ");
-			System.out.println(")\"");
-			if(((Object[])(o[1])).length == 0){
-				System.out.println("Invalid parameters");
-			}else{
-				List<String[]> l = (List<String[]>)((Object[])(o[1]))[0];
-				if(l.size() > 0){
-					System.out.println("Missing positive predicates");
-					for(String[] str : l){
-						System.out.print(" ");
-						for(String s : str) System.out.print(s + " ");
-						System.out.println("");
-					}
-				}
-				l = (List<String[]>)((Object[])(o[1]))[1];
-				if(l.size() > 0){
-					System.out.println("Present negative predicates");
-					for(String[] str : l){
-						System.out.print(" ");
-						for(String s : str) System.out.print(s + " ");
-						System.out.println("");
-					}
-				}
-			}
-		}
-		System.out.println("valdone");
-	}
 	/**************************************************
 	*	Inicializa os valores dos quartos para o GLPSol
 	***************************************************/
