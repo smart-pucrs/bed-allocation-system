@@ -1,62 +1,53 @@
 package br.pucrs.smart.models.firestore;
 
+import java.util.List;
+
 public class TempAloc {
-	private String Especialidade;
-	private String cpf;
-	private String estado;
-	private String except;
-	private String genero;
-	private String leito;
-	private String nomePaciente;
-	private String tipoDeLeito;
 	
-	public String getEspecialidade() {
-		return Especialidade;
+	private boolean validated;
+	private List<Allocation> allocation;
+	
+	public boolean isValidated() {
+		return validated;
 	}
-	public void setEspecialidade(String especialidade) {
-		Especialidade = especialidade;
+	public void setValidated(boolean validated) {
+		this.validated = validated;
 	}
-	public String getCpf() {
-		return cpf;
+	public List<Allocation> getAllocation() {
+		return allocation;
 	}
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
+	public void setAllocation(List<Allocation> allocation) {
+		this.allocation = allocation;
 	}
-	public String getEstado() {
-		return estado;
-	}
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-	public String getExcept() {
-		return except;
-	}
-	public void setExcept(String except) {
-		this.except = except;
-	}
-	public String getGenero() {
-		return genero;
-	}
-	public void setGenero(String genero) {
-		this.genero = genero;
-	}
-	public String getLeito() {
-		return leito;
-	}
-	public void setLeito(String leito) {
-		this.leito = leito;
-	}
-	public String getNomePaciente() {
-		return nomePaciente;
-	}
-	public void setNomePaciente(String nomePaciente) {
-		this.nomePaciente = nomePaciente;
-	}
-	public String getTipoDeLeito() {
-		return tipoDeLeito;
-	}
-	public void setTipoDeLeito(String tipoDeLeito) {
-		this.tipoDeLeito = tipoDeLeito;
+	public void addAllocation(Allocation allocation) {
+		this.allocation.add(allocation);
 	}
 	
+	@Override
+	public String toString() {
+	    StringBuilder sb = new StringBuilder();
+	    sb.append("{ ");
+	    sb.append(" validated : ");
+        sb.append(validated);
+        sb.append(", ");
+        if (allocation != null) {
+	        sb.append(" allocation : [");
+	        for (Allocation a : allocation) {
+	        	sb.append(" { ");
+		        if (a.getIdPaciente() != null) {
+		        	sb.append(" idPaciente : ");
+		        	sb.append(a.getIdPaciente());
+		        	sb.append(", ");
+		        }
+		        if (a.getLeito() != null) {
+		        	sb.append(" leito : ");
+		        	sb.append(a.getLeito());
+		        }
+		        sb.append(" }, ");
+	        }
+	        sb.append("] ");
+	    }
+	    sb.append("} ");
+		return sb.toString();
+	}
 }

@@ -65,7 +65,7 @@ public class FStoreArtifact extends Artifact {
 	void pddl() {
 		try{
 			aloc.pddl();
-			aloc.tests();
+//			aloc.tests();
 		}catch(Exception e){
 			System.out.println(e);
 		}

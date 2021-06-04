@@ -35,8 +35,10 @@ public class DatabaseArtifact extends Artifact {
 			FirebaseOptions options = new FirebaseOptions.Builder().setCredentials(credentials).build();
 			FirebaseApp.initializeApp(options);
 
-			db = FirestoreClient.getFirestore();
-			PddlBuilder pddlBuilder = new PddlBuilder(db);
+			db = FirestoreClient.getFirestore(); 
+			new FirebaseFirestoreReactive(db);
+		    
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
