@@ -6,6 +6,7 @@ public class Allocation {
 	private String leito;
 	private Paciente pacienteData;
 	private Leito leitoData;
+	private LaudosInternacao laudo;
 	
 	
 	
@@ -32,6 +33,12 @@ public class Allocation {
 	}
 	public void setLeitoData(Leito leitoData) {
 		this.leitoData = leitoData;
+	}
+	public LaudosInternacao getLaudo() {
+		return laudo;
+	}
+	public void setLaudo(LaudosInternacao laudo) {
+		this.laudo = laudo;
 	}
 	
 	@Override
@@ -279,11 +286,20 @@ public class Allocation {
         	if(leitoData.getTipoDeLeito() != null) {
         	    sb.append(" tipoDeLeito : ");
         	    sb.append(leitoData.getTipoDeLeito());
-        	}
+    	        sb.append(", ");
+    	    }
+    	    if(leitoData.getDist() != null) {
+    	        sb.append(" dist : ");
+    	        sb.append(leitoData.getDist());
+    	    }
         	sb.append("} ");
+        }
+        if (laudo != null) {
+        	sb.append(" { laudo : a implementar } ");
         }
         sb.append("} ");
 		return sb.toString();
 	}
+	
 	
 }

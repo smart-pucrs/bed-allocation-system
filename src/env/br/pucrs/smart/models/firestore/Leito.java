@@ -14,6 +14,8 @@ public class Leito {
 	private String tipoDeEncaminhamento;
 	private String tipoDeEstadia;
 	private String tipoDeLeito;
+	private String birthtype;
+	private String dist;
 	
 	public String getAge() {
 		return age;
@@ -86,6 +88,18 @@ public class Leito {
 	}
 	public void setTipoDeLeito(String tipoDeLeito) {
 		this.tipoDeLeito = tipoDeLeito;
+	}
+	public String getBirthtype() {
+		return birthtype;
+	}
+	public void setBirthtype(String birthtype) {
+		this.birthtype = birthtype;
+	}
+	public String getDist() {
+		return dist;
+	}
+	public void setDist(String dist) {
+		this.dist = dist;
 	}
 	
 
@@ -169,6 +183,16 @@ public class Leito {
 	    if(tipoDeLeito != null) {
 	        sb.append(" tipoDeLeito : ");
 	        sb.append(tipoDeLeito);
+	        sb.append(", ");
+	    }
+	    if(birthtype != null) {
+	        sb.append(" birthtype : ");
+	        sb.append(birthtype);
+	        sb.append(", ");
+	    }
+	    if(dist != null) {
+	        sb.append(" dist : ");
+	        sb.append(dist);
 	    }
         sb.append("} ");
 		return sb.toString();

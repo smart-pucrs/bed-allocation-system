@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import br.pucrs.smart.models.firestore.Allocation;
+import br.pucrs.smart.models.firestore.LaudosInternacao;
 import br.pucrs.smart.models.firestore.Leito;
 import br.pucrs.smart.models.firestore.Paciente;
 import br.pucrs.smart.models.firestore.TempAloc;
@@ -55,15 +56,29 @@ public class FirebaseFirestoreReactive {
 						JsonObject body = gson.fromJson(json, JsonObject.class);
 						System.out.println("------------------New: " + body);
 						List<Allocation> allocData = new ArrayList<>();
+						ArrayList<LaudosInternacao> laudos = new ArrayList<>();
 						
 						if (body != null) {
 							TempAloc temp = gson.fromJson(body, TempAloc.class);
+						
+
 							
 							for (Allocation c : temp.getAllocation()) {
+								System.out.println("------------------ccccccccccc: " + gson.toJson( c));
 								try {
-									c.setPacienteData(getPaciente(c.getIdPaciente()));
-									c.setLeitoData(getLeito(c.getLeito()));
-									allocData.add(c);
+//									c.setPacienteData(getPaciente(c.getIdPaciente()));
+//									c.setLaudo(getLaudosInternacao(c.getIdPaciente()));
+//									c.setLeitoData(getLeito(c.getLeito()));
+									LaudosInternacao l = new LaudosInternacao();
+									l = getLaudosInternacao(c.getIdPaciente());
+									System.out.println("------------------llllllllllllllllll: " + gson.toJson( l));
+									if(l!=null) {
+										l.setLeito(getLeito(c.getLeito()));
+										laudos.add(l);
+									}
+								
+									
+//									allocData.add(c);
 								} catch (InterruptedException e1) {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
@@ -72,8 +87,16 @@ public class FirebaseFirestoreReactive {
 									e1.printStackTrace();
 								}
 							}
-
-							System.out.println("new allocData: " + allocData.toString());
+							PddlBuilder a = new PddlBuilder(laudos);
+							List<String> toPddl = a.buildPddl();
+							System.out.println("### Strings formadas: ");
+							for (String str : toPddl) {
+								System.out.println(str);
+								
+							}
+							
+//							System.out.println("new allocData: " + allocData.toString());
+							
 						}
 
 												
@@ -128,6 +151,26 @@ public class FirebaseFirestoreReactive {
 			Leito leito = document.toObject(Leito.class);
 			System.out.println(leito.toString());
 			return leito;
+		} else {
+			System.out.println("No such document!");
+		}
+		}
+		return null;
+	}
+	
+	public LaudosInternacao getLaudosInternacao(String idPaciente) throws InterruptedException, ExecutionException {
+		
+		Query query = db.collection("laudosInternacao").whereEqualTo("idPaciente", idPaciente).whereEqualTo("ativo", true).whereEqualTo("internado", false);
+		ApiFuture<QuerySnapshot> querySnapshot = query.get();
+
+		for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
+		  System.out.println(document.getId());
+		
+		if (document.exists()) {
+			// convert document to POJO
+			LaudosInternacao laudos = document.toObject(LaudosInternacao.class);
+//			System.out.println(laudos.toString());
+			return laudos;
 		} else {
 			System.out.println("No such document!");
 		}
