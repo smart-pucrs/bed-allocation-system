@@ -22,12 +22,16 @@ import br.pucrs.smart.models.firestore.Allocation;
 import br.pucrs.smart.models.firestore.LaudosInternacao;
 import br.pucrs.smart.models.firestore.Leito;
 import br.pucrs.smart.models.firestore.Paciente;
+import br.pucrs.smart.models.firestore.PddlStrings;
 import br.pucrs.smart.models.firestore.TempAloc;
+import br.pucrs.smart.val.PDDL;
+import br.pucrs.smart.val.Parser;
 
 
 public class FirebaseFirestoreReactive {
 
 	private final Firestore db;
+	private static PDDL pddl; 
 
 	private Gson gson = new Gson();
 
@@ -40,6 +44,7 @@ public class FirebaseFirestoreReactive {
 
 	void observeData() {
 		System.out.println("## observeData started ##");
+		
 		db.collection("tempAloc").addSnapshotListener(new EventListener<QuerySnapshot>() {
 			@Override
 			public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirestoreException e) {
@@ -55,30 +60,24 @@ public class FirebaseFirestoreReactive {
 						String json = dc.getDocument().getData().toString();
 						JsonObject body = gson.fromJson(json, JsonObject.class);
 						System.out.println("------------------New: " + body);
-						List<Allocation> allocData = new ArrayList<>();
 						ArrayList<LaudosInternacao> laudos = new ArrayList<>();
 						
 						if (body != null) {
 							TempAloc temp = gson.fromJson(body, TempAloc.class);
-						
-
 							
-							for (Allocation c : temp.getAllocation()) {
-								System.out.println("------------------ccccccccccc: " + gson.toJson( c));
+							for (Allocation alloc : temp.getAllocation()) {
 								try {
-//									c.setPacienteData(getPaciente(c.getIdPaciente()));
-//									c.setLaudo(getLaudosInternacao(c.getIdPaciente()));
-//									c.setLeitoData(getLeito(c.getLeito()));
-									LaudosInternacao l = new LaudosInternacao();
-									l = getLaudosInternacao(c.getIdPaciente());
-									System.out.println("------------------llllllllllllllllll: " + gson.toJson( l));
-									if(l!=null) {
-										l.setLeito(getLeito(c.getLeito()));
-										laudos.add(l);
+									LaudosInternacao laudo = new LaudosInternacao();
+									laudo = getLaudosInternacao(alloc.getIdPaciente());
+									if(laudo!=null) {
+										laudo.setLeito(getLeito(alloc.getLeito()));
+										System.out.println("------------------laudo: " + gson.toJson(laudo));
+										laudos.add(laudo);
 									}
+									alloc.setLeitoData(laudo.getLeito());
+									System.out.println("### Alloc -------------------------------- ###");
+									System.out.println(alloc);
 								
-									
-//									allocData.add(c);
 								} catch (InterruptedException e1) {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
@@ -87,20 +86,53 @@ public class FirebaseFirestoreReactive {
 									e1.printStackTrace();
 								}
 							}
-							PddlBuilder a = new PddlBuilder(laudos);
-							List<String> toPddl = a.buildPddl();
-							System.out.println("### Strings formadas: ");
-							for (String str : toPddl) {
-								System.out.println(str);
-								
-							}
 							
-//							System.out.println("new allocData: " + allocData.toString());
+							
+							PddlBuilder a = new PddlBuilder(laudos);
+							PddlStrings pddlStrings = a.buildPddl();
+							System.out.println("### Strings formadas: ");
+							System.out.println("** Problem **");
+							System.out.println(pddlStrings.getProblem());
+							System.out.println("** Plan **");
+							System.out.println(pddlStrings.getPlan());
+							
+							System.out.println("#### Chamando validador -------------------------------- ###");
+							pddl = Parser.parseDomain("src/resources/domain.pddl"); 
+							Parser.parseProblem(pddl, "problem", pddlStrings.getProblem());
+							Parser.parsePlan(pddl, "plan", pddlStrings.getPlan());
+							pddl.fixPlanCase();
+							
+							List<Object[]> out = pddl.tryPlanForce(false);
+							for(Object[] o : out){			
+								System.out.print("Error in action \"( " );
+								for(String s : (String[])o[0]) System.out.print(s + " ");
+								System.out.println(")\"");
+								if(((Object[])(o[1])).length == 0){
+									System.out.println("Invalid parameters");
+								}else{
+									List<String[]> l = (List<String[]>)((Object[])(o[1]))[0];
+									if(l.size() > 0){
+										System.out.println("Missing positive predicates");
+										for(String[] str : l){
+											System.out.print(" ");
+											for(String s : str) System.out.print(s + " ");
+											System.out.println("");
+										}
+									}
+									l = (List<String[]>)((Object[])(o[1]))[1];
+									if(l.size() > 0){
+										System.out.println("Present negative predicates");
+										for(String[] str : l){
+											System.out.print(" ");
+											for(String s : str) System.out.print(s + " ");
+											System.out.println("");
+										}
+									}
+								}
+							}
+							System.out.println("valdone");
 							
 						}
-
-												
-
 						break;
 					case MODIFIED:
 						String json1 = dc.getDocument().getData().toString();
@@ -129,7 +161,6 @@ public class FirebaseFirestoreReactive {
 		if (document.exists()) {
 			// convert document to POJO
 			Paciente paciente = document.toObject(Paciente.class);
-			System.out.println(paciente.toString());
 			return paciente;
 		} else {
 			System.out.println("No such document!");
@@ -143,13 +174,10 @@ public class FirebaseFirestoreReactive {
 		Query query = db.collection("leitos").whereEqualTo("numero", leitoNum);
 		ApiFuture<QuerySnapshot> querySnapshot = query.get();
 
-		for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
-		  System.out.println(document.getId());
-		
+		for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {		
 		if (document.exists()) {
 			// convert document to POJO
 			Leito leito = document.toObject(Leito.class);
-			System.out.println(leito.toString());
 			return leito;
 		} else {
 			System.out.println("No such document!");
@@ -164,12 +192,10 @@ public class FirebaseFirestoreReactive {
 		ApiFuture<QuerySnapshot> querySnapshot = query.get();
 
 		for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
-		  System.out.println(document.getId());
-		
+			
 		if (document.exists()) {
 			// convert document to POJO
 			LaudosInternacao laudos = document.toObject(LaudosInternacao.class);
-//			System.out.println(laudos.toString());
 			return laudos;
 		} else {
 			System.out.println("No such document!");

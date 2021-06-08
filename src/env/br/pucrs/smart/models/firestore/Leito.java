@@ -133,27 +133,28 @@ public class Leito {
 	        sb.append(", ");
 	    }
 	    if(paciente != null) {
-	        sb.append(" paciente : { ");
-	        if(paciente.getProntuario() != null) {
-	            sb.append(" prontuario : ");
-	            sb.append(paciente.getProntuario());
-	            sb.append(", ");
-	        }
-	        if(paciente.getNome() != null) {
-	            sb.append(" nome : ");
-	            sb.append(paciente.getNome());
-	            sb.append(", ");
-	        }
-	        if(paciente.getGenero() != null) {
-	            sb.append(" genero : ");
-	            sb.append(paciente.getGenero());
-	            sb.append(", ");
-	        }
-	        if(paciente.getIdade() != null) {
-	            sb.append(" idade : ");
-	            sb.append(paciente.getIdade());
-	        }
-	        sb.append("}, ");
+	        sb.append(" paciente : ");
+	        sb.append(paciente.toString());
+//	        if(paciente.getProntuario() != null) {
+//	            sb.append(" prontuario : ");
+//	            sb.append(paciente.getProntuario());
+//	            sb.append(", ");
+//	        }
+//	        if(paciente.getNome() != null) {
+//	            sb.append(" nome : ");
+//	            sb.append(paciente.getNome());
+//	            sb.append(", ");
+//	        }
+//	        if(paciente.getGenero() != null) {
+//	            sb.append(" genero : ");
+//	            sb.append(paciente.getGenero());
+//	            sb.append(", ");
+//	        }
+//	        if(paciente.getIdade() != null) {
+//	            sb.append(" idade : ");
+//	            sb.append(paciente.getIdade());
+//	        }
+	        sb.append(", ");
 	    }
 	    if(quarto != null) {
 	        sb.append(" quarto : ");

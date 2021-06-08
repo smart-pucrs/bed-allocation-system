@@ -25,9 +25,9 @@ public class validatorArtifact extends Artifact {
 	}
 
 	@OPERATION
-	void readProblem(String filename){
+	void readProblem(String filename, String problemString){
 		if(domain){
-			Parser.parseProblem(pddl, filename);
+			Parser.parseProblem(pddl, filename, problemString);
 			if(pddl.problem != null){
 				problem = true;
 				defineObsProperty("problem", pddl.problem);
@@ -40,9 +40,9 @@ public class validatorArtifact extends Artifact {
 	}
 
 	@OPERATION
-	void readPlan(String filename){
+	void readPlan(String filename, String planString){
 		if(problem){
-			Parser.parsePlan(pddl, filename);
+			Parser.parsePlan(pddl, filename, planString);
 			if(pddl.hasPlan()){
 				plan = true;
 				defineObsProperty("plan", filename);

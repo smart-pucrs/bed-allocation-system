@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.google.gson.Gson;
 
 import br.pucrs.smart.models.firestore.LaudosInternacao;
+import br.pucrs.smart.models.firestore.PddlStrings;
 
 public class PddlBuilder {
 	
@@ -17,33 +18,23 @@ public class PddlBuilder {
 	
 	PddlBuilder(ArrayList<LaudosInternacao> pacientes) {
 		this.pacientes = pacientes;
-		System.out.println("## PddlBuilder created ##");
-		System.out.println("#################################" + gson.toJson(pacientes));
-		
+		System.out.println("## PddlBuilder created ##");		
 	}
 	
-	List<String> buildPddl() {
+	PddlStrings buildPddl() {
 		System.out.println("PDDL Builder called");
-		List<String> builtPddl = new ArrayList<String>();
-		int countPlano = 0;
+		PddlStrings builtPddl = new PddlStrings();
+//		int countPlano = 0;
 		StringBuilder problem = new StringBuilder();
 		StringBuilder objects = new StringBuilder();
 		StringBuilder initPatient = new StringBuilder();
 		StringBuilder initLeito = new StringBuilder();
 		StringBuilder goal = new StringBuilder();
 		StringBuilder plan = new StringBuilder();
-		
-//		System.out.println(gson.toJson(pacientes));
-
-		
+				
 		for (LaudosInternacao paciente : pacientes) {
-//			System.out.println("Entrou no for");
-//			System.out.println(gson.toJson(paciente.getIdPaciente()));
 			// #### Problema
 			objects.append('\n').append("  " + concatA(paciente.getIdPaciente()) + " - patient ");
-
-//			System.out.println("objects");
-//			System.out.println(objects.toString());
 			
 			initPatient.append("  (patient" + myTrim(paciente.getEspecialidade()) + " " + concatA(paciente.getIdPaciente())+ ")").append("\n");
 			initPatient.append("  (patientspecialty " + concatA(paciente.getIdPaciente()) + " " + myTrim(paciente.getEspecialidade()) + ")").append("\n");
@@ -59,15 +50,9 @@ public class PddlBuilder {
 			if (paciente.getEspecialidade().equals("Obstetricia")) {
 			    initPatient.append("\n").append("  (patientbirthtype " + concatA(paciente.getIdPaciente()) + " " + myTrim(paciente.getBirthtype()) + ")");
 			}
-
-//			System.out.println("initPatient");
-//			System.out.println(initPatient.toString());
 			
 			goal.append(" (allocated " + concatA(paciente.getIdPaciente()) + ")");
 			
-//			System.out.println("goal");
-//			System.out.println(goal.toString());
-
 			// ### Leito
 			if (paciente.getLeito() != null) {
 			    objects.append("\n").append("  " + concatA(paciente.getLeito().getId()) + " - bed ");
@@ -90,53 +75,49 @@ public class PddlBuilder {
 			        initLeito.append("  (bedbirthtype " + concatA(paciente.getLeito().getId()) + " " + myTrim(paciente.getLeito().getBirthtype()) + ")");
 			    }
 			    
-//			    System.out.println("initLeito");
-//				System.out.println(initLeito.toString());
 			}
 			
 
 			// #### Plano
 			switch (paciente.getEspecialidade()) {
 			case "UTI":
-			    plan.append(countPlano + ": ( alocateuti " + concatA(paciente.getIdPaciente()) + ")").append("\n");
+			    plan.append("( alocateuti " + concatA(paciente.getIdPaciente()) + ")").append("\n");
 			    break;
 
 			case "Isolamento":
-			    plan.append(countPlano + ": ( allocateisolation " + concatA(paciente.getIdPaciente()) + " " + concatA(paciente.getLeito().getId()) + ")").append("\n");
+			    plan.append("( allocateisolation " + concatA(paciente.getIdPaciente()) + " " + concatA(paciente.getLeito().getId()) + ")").append("\n");
 			    break;
 
 			case "Obstetrícia":
-			    plan.append(countPlano + ": ( allocateobstetricia " + concatA(paciente.getIdPaciente()) + " " + concatA(paciente.getLeito().getId()) + " " + myTrim(paciente.getBirthtype()) + ")").append("\n");
+			    plan.append("( allocateobstetricia " + concatA(paciente.getIdPaciente()) + " " + concatA(paciente.getLeito().getId()) + " " + myTrim(paciente.getBirthtype()) + ")").append("\n");
 			    break;
 
 			case "UCL – Unidade de Cuidados Especiais":
-			    plan.append(countPlano + ": ( allocateucl " + concatA(paciente.getIdPaciente()) + " " + concatA(paciente.getLeito().getId()) + " " + myTrim(paciente.getAge()) + ")").append("\n");
+			    plan.append("( allocateucl " + concatA(paciente.getIdPaciente()) + " " + concatA(paciente.getLeito().getId()) + " " + myTrim(paciente.getAge()) + ")").append("\n");
 			    break;
 
 			case "AVC":
-			    plan.append(countPlano + ": ( allocateavc " + concatA(paciente.getIdPaciente()) + " " + concatA(paciente.getLeito().getId()) + " " + myTrim(paciente.getGenero()) + ")").append("\n");
+			    plan.append("( allocateavc " + concatA(paciente.getIdPaciente()) + " " + concatA(paciente.getLeito().getId()) + " " + myTrim(paciente.getGenero()) + ")").append("\n");
 			    break;
 
 			case "Psiquiatria":
-			    plan.append(countPlano + ": ( allocatepsiquiatria " + concatA(paciente.getIdPaciente()) + " " + concatA(paciente.getLeito().getId()) + " " + myTrim(paciente.getGenero()) + ")").append("\n");
+			    plan.append("( allocatepsiquiatria " + concatA(paciente.getIdPaciente()) + " " + concatA(paciente.getLeito().getId()) + " " + myTrim(paciente.getGenero()) + ")").append("\n");
 			    break;
 
 			case "Cirurgia bariátrica":
-			    plan.append(countPlano + ": ( allocatecirurgiabariatrica " + concatA(paciente.getIdPaciente()) + " " + concatA(paciente.getLeito().getId()) + " " + myTrim(paciente.getGenero()) + ")").append("\n");
+			    plan.append("( allocatecirurgiabariatrica " + concatA(paciente.getIdPaciente()) + " " + concatA(paciente.getLeito().getId()) + " " + myTrim(paciente.getGenero()) + ")").append("\n");
 			    break;
 
 			case "Ginecologia":
-			    plan.append(countPlano + ": ( allocateginecologia " + concatA(paciente.getIdPaciente()) + " " + concatA(paciente.getLeito().getId()) + " " + myTrim(paciente.getTipoDeLeito()) + ")").append("\n");
+			    plan.append("( allocateginecologia " + concatA(paciente.getIdPaciente()) + " " + concatA(paciente.getLeito().getId()) + " " + myTrim(paciente.getTipoDeLeito()) + ")").append("\n");
 			    break;
 
 			default:
-			    plan.append(countPlano + ": ( allocate " + concatA(paciente.getIdPaciente()) + " " + concatA(paciente.getLeito().getId()) + " " + myTrim(paciente.getEspecialidade()) + " " + myTrim(paciente.getTipoDeEstadia()) + " " + myTrim(paciente.getTipoDeLeito()) + " " + myTrim(paciente.getTipoDeEncaminhamento()) + " " + myTrim(paciente.getGenero()) + " " + myTrim(paciente.getAge()) + " " + myTrim(paciente.getTipoDeCuidado()) + ")").append("\n");
+			    plan.append("( allocate " + concatA(paciente.getIdPaciente()) + " " + concatA(paciente.getLeito().getId()) + " " + myTrim(paciente.getEspecialidade()) + " " + myTrim(paciente.getTipoDeEstadia()) + " " + myTrim(paciente.getTipoDeLeito()) + " " + myTrim(paciente.getTipoDeEncaminhamento()) + " " + myTrim(paciente.getGenero()) + " " + myTrim(paciente.getAge()) + " " + myTrim(paciente.getTipoDeCuidado()) + ")").append("\n");
 			    break;
 			}
 
-//			System.out.println("plan");
-//			System.out.println(plan.toString());
-	        countPlano = countPlano + 1;
+//	        countPlano = countPlano + 1;
 		}
 		
 		problem.append("(define (problem hospital-problem)").append("\n");
@@ -170,6 +151,7 @@ public class PddlBuilder {
 		problem.append("  crianca - age").append("\n");
 		problem.append("  adulto - age").append("\n");
 		problem.append("  adolescente - age").append("\n");
+		problem.append("  indefinido - age").append("\n");
 		problem.append("  masculino - gender").append("\n");
 		problem.append("  feminino - gender").append("\n");
 		problem.append("  eletivo - origin").append("\n");
@@ -190,14 +172,9 @@ public class PddlBuilder {
 		problem.append(" )").append("\n");
 		problem.append(")");
 		
-		builtPddl.add(plan.toString());
+		builtPddl.setPlan(plan.toString());
 		
-		builtPddl.add(problem.toString());
-		
-//		System.out.println("###### Plan ");
-//		System.out.println(plan.toString());
-//		System.out.println("###### Problem ");
-//		System.out.println(problem.toString());
+		builtPddl.setProblem(problem.toString());
 		
 		return builtPddl;
 	}
@@ -205,7 +182,7 @@ public class PddlBuilder {
 	
 	 String myTrim(String str) {
 		 str=str.replaceAll("-", "");
-		return Normalizer.normalize(StringUtils.deleteWhitespace(str), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
+		return Normalizer.normalize(StringUtils.deleteWhitespace(str.toLowerCase()), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
 	}
 	
 	 String concatA(String uid) {
