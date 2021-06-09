@@ -55,31 +55,33 @@
 \maketitle
 
 \section{Domain}
-\textbf{Domain:}  test\\
-\textbf{Problem:} test
+\textbf{Domain:}  hospitaldomain\\
+\textbf{Problem:} hospital-problem
 
 \subsection{Files}
 \textbf{Domain file:}  src/resources/domain.pddl \\
-\textbf{Problem file:} src/resources/problem.pddl\\
-\textbf{Plan file:}    src/resources/plan.pddl
+\textbf{Problem file:} problem\\
+\textbf{Plan file:}    plan
 
 \section{Plan}
 
 \begin{itemize}
-    \item[1.] (\textbf{action1} object1 object2)
+    \item[1.] (\textbf{allocate} alc6aRKbkwjNtKgOJ6UGs aFk9jyUCA8GNDUWjO7fTP medicinainterna longapermanencia clinico agudo masculino adulto intensivos)
+    \item[2.] (\textbf{allocate} a9p3dADZjkRI7lIP3ndf1 a3cxyyl1DCgde9mICuYLv oncologia longapermanencia clinico agudo masculino adulto minimos)
 \end{itemize}
 
 \section{Validation}
 
 \begin{itemize}
-\item[1.] (\textbf{action1} object1 object2)
+\item[1.] (\textbf{allocate} alc6aRKbkwjNtKgOJ6UGs aFk9jyUCA8GNDUWjO7fTP medicinainterna longapermanencia clinico agudo masculino adulto intensivos)
 \begin{itemize}
-	\item[\textbullet] +(\textit{pred1} object1)
-\end{itemize}
+	\item[\textbullet] Positive predicates missing
+	\item[\textbullet] [+] (\textit{bedage} aFk9jyUCA8GNDUWjO7fTP adulto)
+	\item[\textbullet] [+] (\textit{bedorigin} aFk9jyUCA8GNDUWjO7fTP agudo)
 \end{itemize}
 
 \hline
 \vspace{10pt}
-\large \textbf{Goal achieved}
+\large \textbf{Goal not achieved}
 
 \end{document}

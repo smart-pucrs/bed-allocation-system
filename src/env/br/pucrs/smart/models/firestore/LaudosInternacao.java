@@ -137,6 +137,102 @@ public class LaudosInternacao {
 		this.birthtype = birthtype;
 	}
 	
-	
+	@Override
+	public String toString() {
+	    StringBuilder sb = new StringBuilder();
+	    sb.append("{ ");
+        if (age != null) {
+        	sb.append(" age : ");
+        	sb.append(age);
+        	sb.append(", ");
+        }
+       	sb.append(" ativo : ");
+       	sb.append(ativo);
+        sb.append(", ");
+        if (crmMedico != null) {
+        	sb.append(" crmMedico : ");
+        	sb.append(crmMedico);
+        	sb.append(", ");
+        }
+        if (dataAlta != null) {
+        	sb.append(" dataAlta : ");
+        	sb.append(dataAlta);
+        	sb.append(", ");
+        }
+        if (dataInternacao != null) {
+        	sb.append(" dataInternacao : ");
+        	sb.append(dataInternacao);
+        	sb.append(", ");
+        }
+        if (especialidade != null) {
+        	sb.append(" especialidade : ");
+        	sb.append(especialidade);
+        	sb.append(", ");
+        }
+        if (genero != null) {
+        	sb.append(" genero : ");
+        	sb.append(genero);
+        	sb.append(", ");
+        }
+        if (id != null) {
+        	sb.append(" id : ");
+        	sb.append(id);
+        	sb.append(", ");
+        }
+        if (idPaciente != null) {
+        	sb.append(" idPaciente : ");
+        	sb.append(idPaciente);
+        	sb.append(", ");
+        }
+       	sb.append(" internado : ");
+       	sb.append(internado);
+        if (leito != null) {
+        	sb.append(", ");
+        	sb.append(" leito : ");
+        	sb.append(leito.toString());
+        }
+        if (MedicoResponsavel != null) {
+        	sb.append(", ");
+        	sb.append(" MedicoResponsavel : ");
+        	sb.append(MedicoResponsavel);
+        	sb.append(", ");
+        }
+        if (nomePaciente != null) {
+        	sb.append(" nomePaciente : ");
+        	sb.append(nomePaciente);
+        	sb.append(", ");
+        }
+        if (prontuario != null) {
+        	sb.append(" prontuario : ");
+        	sb.append(prontuario);
+        	sb.append(", ");
+        }
+        if (tipoDeCuidado != null) {
+        	sb.append(" tipoDeCuidado : ");
+        	sb.append(tipoDeCuidado);
+        	sb.append(", ");
+        }
+        if (tipoDeEncaminhamento != null) {
+        	sb.append(" tipoDeEncaminhamento : ");
+        	sb.append(tipoDeEncaminhamento);
+        	sb.append(", ");
+        }
+        if (tipoDeEstadia != null) {
+        	sb.append(" tipoDeEstadia : ");
+        	sb.append(tipoDeEstadia);
+        }
+        if (tipoDeLeito != null) {
+        	sb.append(", ");
+        	sb.append(" tipoDeLeito : ");
+        	sb.append(tipoDeLeito);
+        }
+        if (birthtype != null) {
+        	sb.append(", ");
+        	sb.append(" birthtype : ");
+        	sb.append(birthtype);
+        }
+        sb.append("} ");
+		return sb.toString();
+	}
 
 }

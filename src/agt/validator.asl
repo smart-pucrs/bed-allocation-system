@@ -19,6 +19,18 @@
 //+plan(_): outFile(X) <- writeReport(X); tryPlan.
 //+plan(_): true <- tryPlan.
 
++!getValidationResult(Response)
+	: result(WasInformed, IsValid, Errors)
+<-
+	Response = result(WasInformed, IsValid, Errors);
+	.
+
++!kqml_received(Sender,question,getValidationResult,MsgId)
+	<-	.print("Sender:");
+		.print(Sender);
+		!getValidationResult(Response);
+		.send(Sender,assert,Response).
+
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
 

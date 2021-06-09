@@ -1,7 +1,6 @@
 package br.pucrs.smart;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import javax.annotation.Nullable;
@@ -18,29 +17,34 @@ import com.google.cloud.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import br.pucrs.smart.interfaces.IValidator;
 import br.pucrs.smart.models.firestore.Allocation;
 import br.pucrs.smart.models.firestore.LaudosInternacao;
 import br.pucrs.smart.models.firestore.Leito;
 import br.pucrs.smart.models.firestore.Paciente;
-import br.pucrs.smart.models.firestore.PddlStrings;
 import br.pucrs.smart.models.firestore.TempAloc;
-import br.pucrs.smart.val.PDDL;
-import br.pucrs.smart.val.Parser;
+import br.pucrs.smart.models.firestore.Validacao;
 
 
 public class FirebaseFirestoreReactive {
 
 	private final Firestore db;
-	private static PDDL pddl; 
-
+	static IValidator mas = null;
+	
 	private Gson gson = new Gson();
 
 	FirebaseFirestoreReactive(Firestore db) {
-		System.out.println("## PddlBuilder created ##");
+		System.out.println("## FirebaseFirestoreReactive started ##");
 		this.db = db;
 		observeData();
 
 	}
+	
+	public static void setListener(IValidator agent) {
+
+		System.out.println("## FirebaseFirestoreReactive setListener ##");
+		 mas = agent;
+	 }
 
 	void observeData() {
 		System.out.println("## observeData started ##");
@@ -60,8 +64,8 @@ public class FirebaseFirestoreReactive {
 						String json = dc.getDocument().getData().toString();
 						JsonObject body = gson.fromJson(json, JsonObject.class);
 						System.out.println("------------------New: " + body);
-						ArrayList<LaudosInternacao> laudos = new ArrayList<>();
-						
+						ArrayList<LaudosInternacao> laudos = new ArrayList<LaudosInternacao>();
+						Validacao validation = new Validacao();
 						if (body != null) {
 							TempAloc temp = gson.fromJson(body, TempAloc.class);
 							
@@ -71,12 +75,10 @@ public class FirebaseFirestoreReactive {
 									laudo = getLaudosInternacao(alloc.getIdPaciente());
 									if(laudo!=null) {
 										laudo.setLeito(getLeito(alloc.getLeito()));
-										System.out.println("------------------laudo: " + gson.toJson(laudo));
-										laudos.add(laudo);
+//										System.out.println("------------------laudo: " + gson.toJson(laudo));
+										validation.addPacientes(laudo);
+//										System.out.println("------------------validation: ");
 									}
-									alloc.setLeitoData(laudo.getLeito());
-									System.out.println("### Alloc -------------------------------- ###");
-									System.out.println(alloc);
 								
 								} catch (InterruptedException e1) {
 									// TODO Auto-generated catch block
@@ -86,52 +88,9 @@ public class FirebaseFirestoreReactive {
 									e1.printStackTrace();
 								}
 							}
-							
-							
-							PddlBuilder a = new PddlBuilder(laudos);
-							PddlStrings pddlStrings = a.buildPddl();
-							System.out.println("### Strings formadas: ");
-							System.out.println("** Problem **");
-							System.out.println(pddlStrings.getProblem());
-							System.out.println("** Plan **");
-							System.out.println(pddlStrings.getPlan());
-							
-							System.out.println("#### Chamando validador -------------------------------- ###");
-							pddl = Parser.parseDomain("src/resources/domain.pddl"); 
-							Parser.parseProblem(pddl, "problem", pddlStrings.getProblem());
-							Parser.parsePlan(pddl, "plan", pddlStrings.getPlan());
-							pddl.fixPlanCase();
-							
-							List<Object[]> out = pddl.tryPlanForce(false);
-							for(Object[] o : out){			
-								System.out.print("Error in action \"( " );
-								for(String s : (String[])o[0]) System.out.print(s + " ");
-								System.out.println(")\"");
-								if(((Object[])(o[1])).length == 0){
-									System.out.println("Invalid parameters");
-								}else{
-									List<String[]> l = (List<String[]>)((Object[])(o[1]))[0];
-									if(l.size() > 0){
-										System.out.println("Missing positive predicates");
-										for(String[] str : l){
-											System.out.print(" ");
-											for(String s : str) System.out.print(s + " ");
-											System.out.println("");
-										}
-									}
-									l = (List<String[]>)((Object[])(o[1]))[1];
-									if(l.size() > 0){
-										System.out.println("Present negative predicates");
-										for(String[] str : l){
-											System.out.print(" ");
-											for(String s : str) System.out.print(s + " ");
-											System.out.println("");
-										}
-									}
-								}
-							}
-							System.out.println("valdone");
-							
+
+							mas.receiveValidation(validation);
+
 						}
 						break;
 					case MODIFIED:

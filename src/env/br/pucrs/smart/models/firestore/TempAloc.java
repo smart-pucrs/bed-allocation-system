@@ -1,5 +1,6 @@
 package br.pucrs.smart.models.firestore;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TempAloc {
@@ -20,7 +21,12 @@ public class TempAloc {
 		this.allocation = allocation;
 	}
 	public void addAllocation(Allocation allocation) {
-		this.allocation.add(allocation);
+		if (this.allocation != null) {
+			this.allocation.add(allocation);
+		} else {
+			this.allocation = new ArrayList<Allocation>();
+			this.allocation.add(allocation);
+		}
 	}
 	
 	@Override

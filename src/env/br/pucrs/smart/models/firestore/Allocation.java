@@ -53,20 +53,21 @@ public class Allocation {
         if (leito != null) {
         	sb.append(" leito : ");
         	sb.append(leito);
-        	sb.append(", ");
         }
         if (pacienteData != null) {
-        	sb.append(" pacienteData: ");
-        	sb.append(pacienteData.toString());
         	sb.append(", ");
+        	sb.append(" pacienteData : ");
+        	sb.append(pacienteData.toString());
         }
         if (leitoData != null) {
-        	sb.append(" leitoData: ");
+        	sb.append(", ");
+        	sb.append(" leitoData : ");
         	sb.append(leitoData.toString());
         }
         if (laudo != null) {
         	sb.append(", ");
-        	sb.append(" { laudo : a implementar } ");
+        	sb.append(" laudo:  ");
+        	sb.append(laudo.toString());
         }
         sb.append("} ");
 		return sb.toString();

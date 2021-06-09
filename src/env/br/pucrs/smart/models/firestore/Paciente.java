@@ -301,42 +301,9 @@ public class Paciente {
 	    }
 		// Endereço
 	    if (endereco != null) {
-	        sb.append(" endereco : {");
-	        if(endereco.getCep() != null) {
-	            sb.append("  cep : ");
-	            sb.append(endereco.getCep());
-	            sb.append(", ");
-	        }
-	        if(endereco.getLogradouro() != null) {
-	            sb.append("  logradouro : ");
-	            sb.append(endereco.getLogradouro());
-	            sb.append(", ");
-	        }
-	        if(endereco.getNumero() != null) {
-	            sb.append("  numero : ");
-	            sb.append(endereco.getNumero());
-	            sb.append(", ");
-	        }
-	        if(endereco.getComplemento() != null) {
-	            sb.append("  complemento : ");
-	            sb.append(endereco.getComplemento());
-	            sb.append(", ");
-	        }
-	        if(endereco.getBairro() != null) {
-	            sb.append("  bairro : ");
-	            sb.append(endereco.getBairro());
-	            sb.append(", ");
-	        }
-	        if(endereco.getCidade() != null) {
-	            sb.append("  cidade : ");
-	            sb.append(endereco.getCidade());
-	            sb.append(", ");
-	        }
-	        if(endereco.getUf() != null) {
-	            sb.append("  uf : ");
-	            sb.append(endereco.getUf());
-	        }
-	        sb.append(" }, ");
+	        sb.append(" endereco : ");
+	        sb.append(endereco.toString());
+	        sb.append(", ");
 	    }
 		// Documentos
 		if (cartaoSus != null) {

@@ -10,9 +10,10 @@
 
 +!start : true <- .print("Communication specialist agent enabled.").
 
-+request(ResponseId, IntentName, Params, Contexts)
-	:true
++request(RequestedBy, ResponseId, IntentName, Params, Contexts)
+	: true
 <-
+	.print(RequestedBy);
 	.print("Recebido request ",IntentName," do Dialog");
 	!responder(ResponseId, IntentName, Params, Contexts);
 	.
@@ -23,6 +24,13 @@
 	reply("Olá, eu sou seu agente Jason, em que posso lhe ajudar?");
 	.
 
++!responder(ResponseId, IntentName, Params, Contexts)
+	: (IntentName == "Get Validation Result")
+<-
+	
+	.send(assistant,question,getValidationResult);
+//	reply("Olá, eu sou seu agente Jason, em que posso lhe ajudar?");
+	.
 	
 +!responder(ResponseId, IntentName, Params, Contexts)
 	: (IntentName == "Call Intent By Event")
@@ -95,6 +103,10 @@
 <-
     .print("hello world");
     .
+
++!kqml_received(Sender,assert,Response,MsgId)
+	<-	.print("Respondendo para o chatbot: ", Response);
+		reply(Response).
 
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }

@@ -16,12 +16,12 @@ public class PddlBuilder {
 	private ArrayList<LaudosInternacao> pacientes;
 	private Gson gson = new Gson();
 	
-	PddlBuilder(ArrayList<LaudosInternacao> pacientes) {
-		this.pacientes = pacientes;
+	public PddlBuilder(List<LaudosInternacao> list) {
+		this.pacientes = (ArrayList<LaudosInternacao>) list;
 		System.out.println("## PddlBuilder created ##");		
 	}
 	
-	PddlStrings buildPddl() {
+	public PddlStrings buildPddl() {
 		System.out.println("PDDL Builder called");
 		PddlStrings builtPddl = new PddlStrings();
 //		int countPlano = 0;

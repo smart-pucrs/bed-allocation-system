@@ -135,25 +135,6 @@ public class Leito {
 	    if(paciente != null) {
 	        sb.append(" paciente : ");
 	        sb.append(paciente.toString());
-//	        if(paciente.getProntuario() != null) {
-//	            sb.append(" prontuario : ");
-//	            sb.append(paciente.getProntuario());
-//	            sb.append(", ");
-//	        }
-//	        if(paciente.getNome() != null) {
-//	            sb.append(" nome : ");
-//	            sb.append(paciente.getNome());
-//	            sb.append(", ");
-//	        }
-//	        if(paciente.getGenero() != null) {
-//	            sb.append(" genero : ");
-//	            sb.append(paciente.getGenero());
-//	            sb.append(", ");
-//	        }
-//	        if(paciente.getIdade() != null) {
-//	            sb.append(" idade : ");
-//	            sb.append(paciente.getIdade());
-//	        }
 	        sb.append(", ");
 	    }
 	    if(quarto != null) {
@@ -179,23 +160,23 @@ public class Leito {
 	    if(tipoDeEstadia != null) {
 	        sb.append(" tipoDeEstadia : ");
 	        sb.append(tipoDeEstadia);
-	        sb.append(", ");
 	    }
 	    if(tipoDeLeito != null) {
+	        sb.append(", ");
 	        sb.append(" tipoDeLeito : ");
 	        sb.append(tipoDeLeito);
-	        sb.append(", ");
 	    }
 	    if(birthtype != null) {
+	        sb.append(", ");
 	        sb.append(" birthtype : ");
 	        sb.append(birthtype);
-	        sb.append(", ");
 	    }
 	    if(dist != null) {
+	        sb.append(", ");
 	        sb.append(" dist : ");
 	        sb.append(dist);
 	    }
-        sb.append("} ");
+        sb.append("}");
 		return sb.toString();
 	}
 }
