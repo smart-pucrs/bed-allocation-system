@@ -1,4 +1,4 @@
-// CArtAgO artifact code fora project explainable_agents
+// CArtAgO artifact code for project explainable_agents
 
 package br.pucrs.smart;
 
@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
+//import java.util.logging.Logger;
 
 import br.pucrs.smart.interfaces.IAgent;
 import br.pucrs.smart.models.FollowupEventInput;
@@ -21,11 +21,15 @@ import jason.asSyntax.Literal;
 import jason.asSyntax.Term;
 
 public class IntegrationArtifact extends Artifact implements IAgent {
-	private Logger logger = Logger.getLogger("ArtefatoIntegracao." + IntegrationArtifact.class.getName());
+	//private Logger logger = Logger.getLogger("ArtefatoIntegracao." + IntegrationArtifact.class.getName());
 	String jasonResponse = null;
+	Boolean awaitingResponse = true;
+	Boolean generatedEvent = false;
+	String intentEvent = "";
 	OutputContexts jasonOutputContext = null;
 	String session = null;
 	FollowupEventInput followupEventInput = null;
+	HashMap<String, Object> jasonOutputParameters = null;
 	
 	void init() {
 		RestImpl.setListener(this);
@@ -47,7 +51,11 @@ public class IntegrationArtifact extends Artifact implements IAgent {
 	
 	@OPERATION
 	void reply(String response) {
-		this.jasonResponse= response;
+		if (this.awaitingResponse) {
+			this.jasonResponse = response;
+		} else {
+			System.out.println("Resposta chegou atrasada");
+		}
 	}
 	
 	@OPERATION
@@ -61,16 +69,23 @@ public class IntegrationArtifact extends Artifact implements IAgent {
 	@Override
 	public ResponseDialogflow processarIntencao(String responseId, String intentName, HashMap<String, Object> parameters, List<OutputContexts> outputContexts, String session) {
 		this.session = session;
+		this.jasonOutputParameters = parameters;
+		this.awaitingResponse = true;
 		ResponseDialogflow response = new ResponseDialogflow();
-		if (intentName != null) {
-			execInternalOp("createRequestBelief", responseId, intentName, parameters, outputContexts, session);
-			System.out.println("Definindo propriedade observavel");
-		} else {
-			System.out.println("Não foi possível definir a propriedade observavel");
-			response.setFulfillmentText("Intensão não reconhecida");
+		if (!this.generatedEvent || !this.intentEvent.equals(intentName)) {
+//			System.out.println("Entrou no IF ");
+			this.generatedEvent = false;
+			this.intentEvent = "";
+			if (intentName != null) {
+				execInternalOp("createRequestBelief", responseId, intentName, parameters, outputContexts, session);
+				System.out.println("Definindo propriedade observavel");
+			} else {
+				System.out.println("Não foi possível definir a propriedade observavel");
+				response.setFulfillmentText("Intensão não reconhecida");
+			}
 		}
 		int i = 0;
-		while (this.jasonResponse == null && i <= 200) {
+		while (this.jasonResponse == null && i <= 300) {
 			try {
 				Thread.sleep(10);
 				i++;
@@ -90,11 +105,29 @@ public class IntegrationArtifact extends Artifact implements IAgent {
 				this.followupEventInput = null;
 			}
 			this.jasonResponse = null;
+			this.awaitingResponse = false;
+			this.generatedEvent = false;
+			this.intentEvent = "";
 		} else {
 			System.out.println("Sem jasonResponse");
-			response.setFulfillmentText("Sem resposta do agente");
+			//response.setFulfillmentText("Sem resposta do agente");
+			FollowupEventInput newEvent = new FollowupEventInput();
+			newEvent.setName(removeSpaces(intentName));
+			newEvent.setLanguageCode("pt-BR");
+			if (this.jasonOutputParameters != null) {
+				newEvent.setParameters(this.jasonOutputParameters);
+			}
+			response.setFollowupEventInput(newEvent);
+			this.intentEvent = intentName;
+			this.generatedEvent = true;
 		}
+		this.jasonOutputParameters = null;
 		return response;
+	}
+	
+	String removeSpaces(String phrase) {
+		System.out.println(phrase.replaceAll(" ", ""));
+		return phrase.replaceAll(" ", "");
 	}
 	
 	// return a list of param(Key1, Value1)
@@ -159,7 +192,6 @@ public class IntegrationArtifact extends Artifact implements IAgent {
 		ListTerm contextsList = null;
 		ListTerm paramBelief = null;
 		String origin = "";
-		System.out.println("TEST");
 		if (outputContexts != null) {
 			contextsList = createContextBelief(outputContexts);
 		}

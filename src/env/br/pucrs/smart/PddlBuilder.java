@@ -18,11 +18,11 @@ public class PddlBuilder {
 	
 	public PddlBuilder(List<LaudosInternacao> list) {
 		this.pacientes = (ArrayList<LaudosInternacao>) list;
-		System.out.println("## PddlBuilder created ##");		
+//		System.out.println("## PddlBuilder created ##");		
 	}
 	
 	public PddlStrings buildPddl() {
-		System.out.println("PDDL Builder called");
+//		System.out.println("PDDL Builder called");
 		PddlStrings builtPddl = new PddlStrings();
 //		int countPlano = 0;
 		StringBuilder problem = new StringBuilder();

@@ -10,26 +10,65 @@
 
 +!start : true <- .print("Assistant agent enabled.").
 
-+!getValidationResult(Response)
++!getValidationResult
 <- 
 	.send(validator,question,getValidationResult);
 	.
 	
-+!setValidationResult(Result, Response)
++!setValidationResult(Result) // result(WasInformed, IsValid, Errors) Errors = [err(Nome, Leito, [mot(Type, Predicate, PredType)])];  
 <- 
-	+Result;
-	Response = "Estou analisando a sua validação.";
-	.send(operator,assert,"Estou analisando a sua validação.")
+	+Result; 
+	.print("Result: ");
+	.print(Result);
+	!analiseResult(Result, Response);
+	.print(Response);
+	.print("Sending response to agent operador");
+	.send(operator,assert,Response)
+	.
+	
++!analiseResult(result(WasInformed, IsValid, Errors), Resp)
+	: (IsValid == true)
+<-
+	Resp = "O seu plano de alocação de leitos não possui nenhuma falha. Posso confirmar a alocação?";
+	.
++!analiseResult(result(WasInformed, IsValid, Errors), Resp)
+	: (IsValid == false)
+<-
+	Temp = "O seu plano de alocação de leitos possui falhas. Houve um erro ao alocar os seguintes pacientes: ";
+	!analiseErrors(Errors, Temp, Response);
+	.concat(Response, "Devo confirmar a alocação mesmo assim ou prefere que eu sugira uma alocação otimizada?", Resp);
+	.print(Resp);
+	.
++!analiseErrors([err(Nome, Leito, Motives)|[]], Temp, Resp)
+<-
+	.concat(Temp," E ", Nome, " no leito ", Leito, " - Pois o leito  ", Leito ," não é de ", T);
+	!analiseMotives(Motives, T, Resp);
+	.
++!analiseErrors([err(Nome, Leito, Motives)|Rest], Temp, Resp)
+<-
+	.concat(Temp, Nome, " no leito ", Leito, " - Pois o leito  ", Leito ," não é de ", T);
+	!analiseMotives(Motives, T, Response);
+	!analiseErrors(Rest, Response, Resp)
+	.
++!analiseMotives([mot(Type, Predicate, PredType)|[]], Temp, Resp)
+	: Type == "missingPositive"
+<-
+	.concat(Temp, " e ", Predicate, " ", PredType, " como é o caso do paciente. ", Resp);
+	.
++!analiseMotives([mot(Type, Predicate, PredType)|Rest], Temp, Resp)
+	: Type == "missingPositive"
+<-
+	.concat(Temp, Predicate, " ", PredType, ", ", T);
+	!analiseMotives(Rest, T, Resp);
 	.
 
 +!kqml_received(Sender,question,getValidationResult,MsgId)
-	<-	.print("Sender:");
-		.print(Sender);
-		!getValidationResult(Response);
-		.send(Sender,assert,Response).
+	<-	.print("Agent ", Sender, " requesting validation result.");
+		!getValidationResult.
 		
 +!kqml_received(validator,assert,Result,MsgId)
-	<-	!setValidationResult(Result, Response).
+	<-	.print("Response received from agente validador");
+		!setValidationResult(Result).
 
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }

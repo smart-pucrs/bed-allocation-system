@@ -2,6 +2,9 @@
 
 package br.pucrs.smart.val;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -9,18 +12,26 @@ import com.google.gson.Gson;
 import br.pucrs.smart.FirebaseFirestoreReactive;
 import br.pucrs.smart.PddlBuilder;
 import br.pucrs.smart.interfaces.IValidator;
+import br.pucrs.smart.models.OutputContexts;
+import br.pucrs.smart.models.firestore.ErrorVal;
+import br.pucrs.smart.models.firestore.LaudosInternacao;
 import br.pucrs.smart.models.firestore.PddlStrings;
+import br.pucrs.smart.models.firestore.ResultVal;
 import br.pucrs.smart.models.firestore.Validacao;
 import cartago.Artifact;
 import cartago.INTERNAL_OPERATION;
 import cartago.OPERATION;
 import jason.asSyntax.ASSyntax;
+import jason.asSyntax.ListTerm;
+import jason.asSyntax.Literal;
+import jason.asSyntax.Term;
 
 public class validatorArtifact extends Artifact implements IValidator{
 	private static PDDL pddl = null;
 	boolean domain = false;
 	boolean problem = false;
 	boolean plan = false;
+	private List<LaudosInternacao> laudos;
 
 	private Gson gson = new Gson();
 	
@@ -140,163 +151,260 @@ public class validatorArtifact extends Artifact implements IValidator{
 		defineObsProperty(str, str2);
 	}
 		
-	//add to belief base result(WasInformed, IsValid, Errors) Errors = [String];  
+	//add to belief base result(WasInformed, IsValid, Errors) Errors = [err(Nome, Leito, [mot(Type, Predicate, PredType)])];  
 	@INTERNAL_OPERATION
-	void createResultBelief(boolean isValid, String errors) {
-		defineObsProperty("result", false, isValid, errors);
-	}	
+	void createResultBelief(boolean isValid, List<ResultVal> finalResult) {
 
+//		System.out.println("### ---------------------------------- finalResult");
+		for (ResultVal r : finalResult) {
+			
+//			System.out.println(r.toString());
+		}
+		defineObsProperty("result", false, isValid, createMotiveBelief(finalResult));
+	}
+	
+	ListTerm createMotiveBelief(List<ResultVal> finalResult) {
+		Collection<Term> terms = new LinkedList<Term>();
+		for (ResultVal r : finalResult) {
+			Literal l = ASSyntax.createLiteral("err", ASSyntax.createString(r.getNomePaciente()));
+			l.addTerm(ASSyntax.createString(r.getNumeroLeito()));
+			if (r.getErrors() != null) {
+				ListTerm errorsList = createErrorBelief(r.getErrors());
+				l.addTerm(errorsList);
+			}
+			terms.add(l);
+		}
+		
+		return ASSyntax.createList(terms);			
+	}
+	
+	ListTerm createErrorBelief(List<ErrorVal> errorsVal) {
+		Collection<Term> terms = new LinkedList<Term>();
+		for (ErrorVal e : errorsVal) {
+			Literal l = ASSyntax.createLiteral("mot", ASSyntax.createString(e.getType()));
+			l.addTerm(ASSyntax.createString(e.getPredicado()));
+			l.addTerm(ASSyntax.createString(e.getPredType()));
+			terms.add(l);
+		}
+		
+		return ASSyntax.createList(terms);			
+	}
+	
+	String getPacienteName(String id) {
+		for (LaudosInternacao l : laudos) {
+			if (l.getIdPaciente().equals(id)) return l.getNomePaciente();
+		}
+		return null;
+	}
+	
+	String getLeitoNumber(String id) {
+		for (LaudosInternacao l : laudos) {
+			if (l.getLeito().getId().equals(id)) return l.getLeito().getNumero();
+		}
+		return null;
+	}
+
+	
+	String changePredType(String str) {
+		switch (str) {
+	    case "bedstay":
+	      return "Tipo de Estadia ";
+	    case "bedroomtype":
+	      return "Tipo ";
+	    case "bedorigin":
+	      return "Tipo de Encaminhamento ";
+	    case "bedgender":
+	      return "Gênero ";
+	    case "bedage":
+	      return "Idade ";
+	    case "bedbirthtype":
+	      return "Tipo de nascimento ";
+	    case "bedcare":
+	      return "Cuidados ";
+	    case "bedspecialty":
+	      return "Especialidade ";
+	    case "bedisolation":
+	      return "Isolamento ";
+	    case "minimos":
+	      return "Mínimos";
+	    case "intensivos":
+	      return "Intensivos";
+	    case "semiintensivos":
+	      return "Semi-Intensivos";
+	    case "geral":
+	      return "Geral";
+	    case "cardiologia":
+	      return "Cardiologia";
+	    case "cirurgiabariatrica":
+	      return "Cirurgia Bariatrica";
+	    case "cirurgiacardiaca":
+	      return "Cirurgia Cardíaca";
+	    case "uclunidadedecuidadosespeciais":
+	      return "UCL";
+	    case "cirurgiadigestiva":
+	      return "Cirurgia Digestiva";
+	    case "cirurgiavascular":
+	      return "Cirurgia Vascular";
+	    case "endovascular":
+	      return "Endovascular";
+	    case "gastro":
+	      return "Gastro";
+	    case "ginecologia":
+	      return "Ginecologia";
+	    case "infecto":
+	      return "Infecto";
+	    case "medicinainterna":
+	      return "Medicina Interna";
+	    case "neurologia":
+	      return "Neurologia";
+	    case "obstetricia":
+	      return "Obstetrícia";
+	    case "oncologia":
+	      return "Oncologia";
+	    case "pneumo":
+	      return "Pneumo";
+	    case "psiquiatria":
+	      return "Psiquiatria";
+	    case "uti":
+	      return "UTI";
+	    case "aborto":
+	      return "Aborto";
+	    case "nascimento":
+	      return "Nascimento";
+	    case "crianca":
+	      return "Infantil";
+	    case "adulto":
+	      return "Adulto";
+	    case "adolescente":
+	      return "Adolescente";
+	    case "masculino":
+	      return "Masculino";
+	    case "feminino":
+	      return "Feminino";
+	    case "eletivo":
+	      return "Eletivo";
+	    case "agudo":
+	      return "Agudo";
+	    case "clinico":
+	      return "Clínico";
+	    case "cirurgico":
+	      return "Cirúrgico";
+	    case "longapermanencia":
+	      return "Longa Permanência";
+	    case "girorapido":
+	      return "Giro Rápido";
+	    default:
+	      return " ";
+	  }
+		
+	}
+	
+	
 	@Override
 	public void receiveValidation(Validacao val) {
+		this.laudos = val.getPacientes();
 		// TODO Auto-generated method stub
-		System.out.println(val.toString());
+//		System.out.println(val.toString());
 		
-
-		System.out.println("### chamando PddlBuilder");
+		/*********************************************
+		 * Transforming database data into pddl files
+		 * *******************************************/
+//		System.out.println("### chamando PddlBuilder");
 		PddlBuilder a = new PddlBuilder(val.getPacientes());
 		PddlStrings pddlStrings = a.buildPddl();
 		val.setProblema(pddlStrings.getProblem());
 		val.setPlano(pddlStrings.getPlan());
-		System.out.println("### Strings formadas: ");
-		System.out.println("** Problem **");
-		System.out.println(pddlStrings.getProblem());
-		System.out.println("** Plan **");
-		System.out.println(pddlStrings.getPlan());
+//		System.out.println("### Strings formadas: ");
+//		System.out.println("** Problem **");
+//		System.out.println(pddlStrings.getProblem());
+//		System.out.println("** Plan **");
+//		System.out.println(pddlStrings.getPlan());
+		/********************************************/
 		
-		System.out.println("#### Chamando validador -------------------------------- ###");
+		/***************************************
+		 * Calling PDDL validator
+		 * *************************************/
+//		System.out.println("#### Chamando validador");
 		pddl = Parser.parseDomain("src/resources/domain.pddl"); 
 		Parser.parseProblem(pddl, "problem", pddlStrings.getProblem());
-		Parser.parsePlan(pddl, "plan", pddlStrings.getPlan());
+		Parser.parsePlan(pddl, "plan", pddlStrings.getPlan());		
+		List<Object[]> out = pddl.tryPlanForce(false);
 		
-//		List<Object[]> out = pddl.tryPlanForce(false);
-		
-		
-		if(hasObsProperty("goalAchieved")) removeObsProperty("goalAchieved");
-		if(hasObsProperty("failedAction")) removeObsProperty("failedAction");
-		if(hasObsProperty("invalidParameters")) removeObsProperty("invalidParameters");
-		while(hasObsProperty("missingPositive")) removeObsProperty("missingPositive");
-		while(hasObsProperty("presentNegative")) removeObsProperty("presentNegative");
-//		if(plan){			
-			Object[] out = pddl.tryPlan(false);
-			String err = "";
-			if(out != null){
-				if(hasObsProperty("planSucceeded")) removeObsProperty("planSucceeded");
-//				defineObsProperty("planFailed");
-				execInternalOp("createBelief", "planFailed");
-				//action
-				String[] auxA = (String[])out[0];
-				String aux = auxA[0];
-				for(int i = 0; i < auxA.length; i++) aux += " " + auxA[i];
-//				defineObsProperty("failedAction", aux);
-				execInternalOp("createBelief", "failedAction", aux);
-				if(((Object[])(out[1])).length == 0){
-//					defineObsProperty("invalidParameters");
-					execInternalOp("createBelief", "invalidParameters");
-					err = "invalidParameters";
-				}else{
-					List<String[]> l = (List<String[]>)((Object[])(out[1]))[0];
-					if(l.size() > 0){
-						for(String[] str : l){			
-							aux = str[0];
-							for(int i = 0; i < str.length; i++) aux += " " + str[i];
-//							defineObsProperty("missingPositive", aux);
-
-							execInternalOp("createBelief", "missingPositive", aux);
-							err = "missingPositive : " + aux;
-						}
-					}
-					l = (List<String[]>)((Object[])(out[1]))[1];
-					if(l.size() > 0){
-						for(String[] str : l){		
-							aux = str[0];
-							for(int i = 0; i < str.length; i++) aux += " " + str[i];
-//							defineObsProperty("presentNegative", aux);
-							execInternalOp("createBelief", "presentNegative", aux);
-							err = "presentNegative : " + aux;
-						}
-					}
-				}
-			}
-			if(hasObsProperty("planFailed")) removeObsProperty("planFailed");
-//			defineObsProperty("planSucceeded");
-			execInternalOp("createBelief", "planSucceeded");
-			if(pddl.goalAchieved()) execInternalOp("createBelief", "goalAchieved"); //defineObsProperty("goalAchieved");
-			System.out.println("Goal Achieved: " + pddl.goalAchieved());
-			execInternalOp("createResultBelief", pddl.goalAchieved(), err);
-			pddl.valOut("src/resources/output.tex");
-
-	}
-		
-//		System.out.println("#### out ###");
+		/***************************************
+		 * Building result
+		 * *************************************/
+//		System.out.println("#### Building result");
 //		System.out.println(gson.toJson(out));
-//		for(Object[] o : out){			
+		List<ResultVal> finalResult = new ArrayList<>();
+		for(Object[] o : out){
+			ResultVal resultVal = new ResultVal();
 //			System.out.print("Error in action \"( " );
-//			for(String s : (String[])o[0]) System.out.print(s + " ");
+			resultVal.setValid(false);
+			int i = 0;
+			for(String s : (String[])o[0]) {				
+//				System.out.print(s + " ");
+				if (i==1) resultVal.setIdPaciente(takeOutA(s));
+				if (i==2) resultVal.setIdLeito(takeOutA(s));
+				i++;
+			}
 //			System.out.println(")\"");
-//			if(((Object[])(o[1])).length == 0){
-//				System.out.println("Invalid parameters");
-//			}else{
-//				List<String[]> l = (List<String[]>)((Object[])(o[1]))[0];
-//				if(l.size() > 0){
-//					System.out.println("Missing positive predicates");
-//					for(String[] str : l){
-//						System.out.print(" ");
-//						for(String s : str) System.out.print(s + " ");
-//						System.out.println("");
-//					}
-//				}
-//				l = (List<String[]>)((Object[])(o[1]))[1];
-//				if(l.size() > 0){
-//					System.out.println("Present negative predicates");
-//					for(String[] str : l){
-//						System.out.print(" ");
-//						for(String s : str) System.out.print(s + " ");
-//						System.out.println("");
-//					}
-//				}
-//			}
-//		}
-//		
-//		System.out.println("valdone");
-//		
-		
-//	}
-	
-	//%PLACEHOLDER%
-	/*public void tests(){
-		PDDL test = Parser.parseDomain("domain.pddl");
-		//test.printDomain();
-		Parser.parseProblem(test, "problem.pddl");
-		Parser.parsePlan(test, "plan.pddl");
-		List<Object[]> out = test.tryPlanForce(false);
-		for(Object[] o : out){			
-			System.out.print("Error in action \"( " );
-			for(String s : (String[])o[0]) System.out.print(s + " ");
-			System.out.println(")\"");
 			if(((Object[])(o[1])).length == 0){
-				System.out.println("Invalid parameters");
-			}else{
+				ErrorVal errorVal = new ErrorVal();
+//				System.out.println("Invalid parameters");
+				errorVal.setType("invalidParameters");
+				resultVal.addErrors(errorVal);
+			}else{				
 				List<String[]> l = (List<String[]>)((Object[])(o[1]))[0];
 				if(l.size() > 0){
-					System.out.println("Missing positive predicates");
+//					System.out.println("Missing positive predicates");
 					for(String[] str : l){
-						System.out.print(" ");
-						for(String s : str) System.out.print(s + " ");
-						System.out.println("");
+						ErrorVal errorVal = new ErrorVal();
+						errorVal.setType("missingPositive");
+//						System.out.println(" ");
+						int j = 0;
+						for(String s : str) {
+//							System.out.println("s["+j+"]: "+s);
+							if (j==0) errorVal.setPredicado(changePredType(s));
+							if (j==1) errorVal.setId(takeOutA(s));
+							if (j==2) errorVal.setPredType(changePredType(s));
+							j++;
+						}
+						resultVal.addErrors(errorVal);
+//						System.out.println("");
 					}
 				}
 				l = (List<String[]>)((Object[])(o[1]))[1];
 				if(l.size() > 0){
-					System.out.println("Present negative predicates");
+//					System.out.println("Present negative predicates");
 					for(String[] str : l){
-						System.out.print(" ");
-						for(String s : str) System.out.print(s + " ");
-						System.out.println("");
+						ErrorVal errorVal = new ErrorVal();
+						errorVal.setType("presentNegative");
+//						System.out.println(" ");
+						int j = 0;
+						for(String s : str) {
+//							System.out.println("s["+j+"]: "+s);
+							if (j==0) errorVal.setPredicado(changePredType(s));
+							if (j==1) errorVal.setId(takeOutA(s));
+							if (j==2) errorVal.setPredType(changePredType(s));
+							j++;
+						}
+						resultVal.addErrors(errorVal);
+//						System.out.println("");
 					}
 				}
+				
 			}
+			resultVal.setNomePaciente(getPacienteName(resultVal.getIdPaciente()));
+			resultVal.setNumeroLeito(getLeitoNumber(resultVal.getIdLeito()));
+			finalResult.add(resultVal);
 		}
-		System.out.println("valdone");
-	}*/
+		execInternalOp("createResultBelief", pddl.goalAchieved(), finalResult);
+		pddl.valOut("src/resources/output.tex");
+	}
+	
+	String takeOutA(String str) {
+		StringBuilder newStr = new StringBuilder();
+		newStr.append(str);
+		return (newStr.deleteCharAt(0)).toString();
+	}
 }
-

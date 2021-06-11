@@ -63,7 +63,7 @@ public class FirebaseFirestoreReactive {
 					case ADDED:
 						String json = dc.getDocument().getData().toString();
 						JsonObject body = gson.fromJson(json, JsonObject.class);
-						System.out.println("------------------New: " + body);
+						System.out.println("New: " + body);
 						ArrayList<LaudosInternacao> laudos = new ArrayList<LaudosInternacao>();
 						Validacao validation = new Validacao();
 						if (body != null) {
