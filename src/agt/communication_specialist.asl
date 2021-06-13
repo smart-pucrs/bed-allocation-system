@@ -11,7 +11,7 @@
 +!start : true <- .print("Communication specialist agent enabled.").
 
 +request(RequestedBy, ResponseId, IntentName, Params, Contexts)
-	: true
+	: RequestedBy == "operator"
 <-
 	.print("Request received - ",IntentName," from Dialog");
 	!responder(RequestedBy, ResponseId, IntentName, Params, Contexts);
@@ -29,7 +29,23 @@
 	
 	.print("Chatbot of ", RequestedBy, " is requesting plan validation.");
 	.send(assistant,question,getValidationResult);
-//	reply("Olá, eu sou seu agente Jason, em que posso lhe ajudar?");
+	.
+	
+
++!responder(RequestedBy, ResponseId, IntentName, Params, Contexts)
+	: (IntentName == "Get Optimised Allocation")
+<-
+	
+	.print("Chatbot of ", RequestedBy, " is requesting an optimised allocation.");
+	.send(assistant,question,getOptimisedAllocation);
+	.
+	
++!responder(RequestedBy, ResponseId, IntentName, Params, Contexts)
+	: (IntentName == "Get Validation Result - optimize")
+<-
+	
+	.print("Chatbot of ", RequestedBy, " is requesting an optimised allocation.");
+	.send(assistant,question,getOptimisedAllocation);
 	.
 	
 +!responder(RequestedBy, ResponseId, IntentName, Params, Contexts)

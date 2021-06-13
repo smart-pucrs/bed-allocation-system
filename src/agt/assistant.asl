@@ -10,6 +10,11 @@
 
 +!start : true <- .print("Assistant agent enabled.").
 
++!getOptimisedAllocation
+<- 
+	.send(optimiser,question,getOptimisedAllocation);
+	.
+	
 +!getValidationResult
 <- 
 	.send(validator,question,getValidationResult);
@@ -67,8 +72,17 @@
 		!getValidationResult.
 		
 +!kqml_received(validator,assert,Result,MsgId)
-	<-	.print("Response received from agente validador");
+	<-	.print("Response received from agent validador");
 		!setValidationResult(Result).
+
++!kqml_received(Sender,question,getOptimisedAllocation,MsgId)
+	<-	.print("Agent ", Sender, " requesting an optmised allocation.");
+		!getOptimisedAllocation.
+			
++!kqml_received(optimiser,assert,Response,MsgId)
+	<-	.print("Response received from agent optimiser");
+		.send(operator,assert,Response).
+
 
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
