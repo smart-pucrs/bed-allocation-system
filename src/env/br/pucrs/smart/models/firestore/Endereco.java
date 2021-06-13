@@ -51,4 +51,47 @@ public class Endereco {
 	public void setUf(String uf) {
 		this.uf = uf;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+	    sb.append("{ ");
+		if(cep != null) {
+            sb.append(" cep : ");
+            sb.append(cep);
+            sb.append(", ");
+        }
+        if(logradouro != null) {
+            sb.append(" logradouro : ");
+            sb.append(logradouro);
+            sb.append(", ");
+        }
+        if(numero != null) {
+            sb.append(" numero : ");
+            sb.append(numero);
+            sb.append(", ");
+        }
+        if(complemento != null) {
+            sb.append(" complemento : ");
+            sb.append(complemento);
+            sb.append(", ");
+        }
+        if(bairro != null) {
+            sb.append(" bairro : ");
+            sb.append(bairro);
+            sb.append(", ");
+        }
+        if(cidade != null) {
+            sb.append(" cidade : ");
+            sb.append(cidade);
+            sb.append(", ");
+        }
+        if(uf != null) {
+            sb.append(" uf : ");
+            sb.append(uf);
+        }
+        sb.append("} ");
+		return sb.toString();
+	}
+	
 }

@@ -329,7 +329,6 @@ public class PDDL{
 										}
 									}
 								}
-								break;
 							}else{
 								Object[] effects = act.getEffects(state, pars);
 								for(String[] pE : (List<String[]>)effects[0]){

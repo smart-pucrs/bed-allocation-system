@@ -213,4 +213,129 @@ public class Paciente {
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
+
+	@Override
+	public String toString() {
+	    StringBuilder sb = new StringBuilder();
+//	    sb.append("CPF:").append(cpf);
+	    sb.append("{ ");
+	    if (id != null) {
+	        sb.append(" id : ");
+	        sb.append(id);
+	        sb.append(", ");
+	    }
+		if (prontuario != null) {
+	        sb.append(" prontuario : ");
+	        sb.append(prontuario);
+	        sb.append(", ");
+	    }
+		// Inf Pessoais
+        sb.append(" falecido : ");
+        sb.append(falecido);
+        sb.append(", ");
+		if (nome != null) {
+	        sb.append(" nome : ");
+	        sb.append(nome);
+	        sb.append(", ");
+	    }
+	    if (nascimento != null) {
+	        sb.append(" nascimento : ");
+	        sb.append(nascimento);
+	        sb.append(", ");
+	    }
+		if (genero != null) {
+	        sb.append(" genero : ");
+	        sb.append(genero);
+	        sb.append(", ");
+	    }
+		if (estadoCivil != null) {
+	        sb.append(" estadoCivil : ");
+	        sb.append(estadoCivil);
+	        sb.append(", ");
+	    }
+		if (nomeDaMae != null) {
+	        sb.append(" nomeDaMae : ");
+	        sb.append(nomeDaMae);
+	        sb.append(", ");
+	    }
+		if (nomeDoPai != null) {
+	        sb.append(" nomeDoPai : ");
+	        sb.append(nomeDoPai);
+	        sb.append(", ");
+	    }
+		if (raca != null) {
+	        sb.append(" raca : ");
+	        sb.append(raca);
+	        sb.append(", ");
+	    }
+		if (religiao != null) {
+	        sb.append(" religiao : ");
+	        sb.append(religiao);
+	        sb.append(", ");
+	    }
+		if (naturalidade != null) {
+	        sb.append(" naturalidade : ");
+	        sb.append(naturalidade);
+	        sb.append(", ");
+	    }
+		if (nacionalidade != null) {
+	        sb.append(" nacionalidade : ");
+	        sb.append(nacionalidade);
+	        sb.append(", ");
+	    }
+		if (escolaridade != null) {
+	        sb.append(" escolaridade : ");
+	        sb.append(escolaridade);
+	        sb.append(", ");
+	    }
+		// Contato
+		if (telefone != null) {
+	        sb.append(" telefone : ");
+	        sb.append(telefone);
+	        sb.append(", ");
+	    }
+		if (email != null) {
+	        sb.append(" email : ");
+	        sb.append(email);
+	        sb.append(", ");
+	    }
+		// Endereço
+	    if (endereco != null) {
+	        sb.append(" endereco : ");
+	        sb.append(endereco.toString());
+	        sb.append(", ");
+	    }
+		// Documentos
+		if (cartaoSus != null) {
+	        sb.append(" cartaoSus : ");
+	        sb.append(cartaoSus);
+	        sb.append(", ");
+	    }
+		if (rg != null) {
+	        sb.append(" rg : ");
+	        sb.append(rg);
+	        sb.append(", ");
+	    }
+		if (ufRg != null) {
+	        sb.append(" ufRg : ");
+	        sb.append(ufRg);
+	        sb.append(", ");
+	    }
+		if (orgaoEmissorRg != null) {
+	        sb.append(" orgaoEmissorRg : ");
+	        sb.append(orgaoEmissorRg);
+	        sb.append(", ");
+	    }
+	    if (emissaoRG != null) {
+	        sb.append(" emissaoRG : ");
+	        sb.append(emissaoRG);
+	        sb.append(", ");
+	    }
+		if (cpf != null) {
+	        sb.append(" cpf : ");
+	        sb.append(cpf);
+	    }
+		sb.append("} ");
+		return sb.toString();
+	}
 }

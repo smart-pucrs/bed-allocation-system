@@ -584,40 +584,31 @@ final static String yyrule[] = {
 		pddl.domainFile = filename;
 		return pddl;
 	}
-	public static void parseProblem(PDDL domain, String filename){
+	public static void parseProblem(PDDL domain, String filename, String problem){
 		file = filename;
 		pddl = domain; 
-		try {
-			Yylex.reset();
-			Parser yyparser = new Parser(new FileReader(filename));
-			yyparser.yyparse();
-		}
-		catch (IOException e) {
-		  System.err.println("IO error :"+e);
-		}
+		Yylex.reset();
+		Parser yyparser = new Parser(new StringReader(problem));
+		yyparser.yyparse();
 		pddl.problemFile = filename;
 	}
-	public static void parsePlan(PDDL domain, String filename){
+	public static void parsePlan(PDDL domain, String filename, String plan){
 		file = filename;
 		pddl = domain; 
-		try {
-			Yylex.reset();
-			Parser yyparser = new Parser(new FileReader(filename));
-			yyparser.yyparse();
-		}
-		catch (IOException e) {
-		  System.err.println("IO error :"+e);
-		}
+		Yylex.reset();
+		Parser yyparser = new Parser(new StringReader(plan));
+		yyparser.yyparse();
 		pddl.fixPlanCase();
 		pddl.planFile = filename;
 	}
 	
 
 	public static void main(String args[]) throws IOException {
-		pddl = parseDomain("test\\domain.pddl");
+		pddl = parseDomain("src\\resources\\domain.pddl");
 		pddl.printDomain();
-		parseProblem(pddl, "test\\problem.pddl");
-		parsePlan(pddl, "test\\plan.pddl");
+		
+		parseProblem(pddl, "problem", args[0]);
+		parsePlan(pddl, "plan", args[1]);
 		if(!pddl.checkA()){
 			System.out.println("__________________________");
 			pddl.planTest();

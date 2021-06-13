@@ -24,6 +24,7 @@ build
 
 # temp files
 *.pddl
+!src/resources/domain.pddl
 *.dom
 
 # key file

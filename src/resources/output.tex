@@ -55,49 +55,38 @@
 \maketitle
 
 \section{Domain}
-\textbf{Domain:}  hospital\\
-\textbf{Problem:} aloc
+\textbf{Domain:}  hospitaldomain\\
+\textbf{Problem:} hospital-problem
 
 \subsection{Files}
 \textbf{Domain file:}  src/resources/domain.pddl \\
-\textbf{Problem file:} src/resources/problem.pddl\\
-\textbf{Plan file:}    src/resources/plan.pddl
+\textbf{Problem file:} problem\\
+\textbf{Plan file:}    plan
 
 \section{Plan}
 
 \begin{itemize}
-    \item[1.] (\textbf{aloc-1} 93092302930 110a genero--Masculino genero--Masculino)
-    \item[2.] (\textbf{aloc-1} 09090909091 110b genero--Masculino genero--Masculino)
-    \item[3.] (\textbf{aloc-1} 23433454353 112a genero--Feminino genero--Feminino)
-    \item[4.] (\textbf{aloc-1} 34343434324 112d genero--Feminino genero--Feminino)
+    \item[1.] (\textbf{allocate} alc6aRKbkwjNtKgOJ6UGs aFk9jyUCA8GNDUWjO7fTP medicinainterna longapermanencia clinico agudo masculino adulto intensivos)
+    \item[2.] (\textbf{allocate} a9p3dADZjkRI7lIP3ndf1 a3cxyyl1DCgde9mICuYLv oncologia longapermanencia clinico agudo masculino adulto minimos)
 \end{itemize}
 
 \section{Validation}
 
 \begin{itemize}
-\item[1.] (\textbf{aloc-1} 93092302930 110a genero--Masculino genero--Masculino)
+\item[1.] (\textbf{allocate} alc6aRKbkwjNtKgOJ6UGs aFk9jyUCA8GNDUWjO7fTP medicinainterna longapermanencia clinico agudo masculino adulto intensivos)
 \begin{itemize}
-	\item[\textbullet] +(\textit{alocado} 93092302930)
-	\item[\textbullet] +(\textit{ocupado} 110a)
-	\item[\textbullet] +(\textit{in} 93092302930 110a)
+	\item[\textbullet] Positive predicates missing
+	\item[\textbullet] [+] (\textit{bedage} aFk9jyUCA8GNDUWjO7fTP adulto)
+	\item[\textbullet] [+] (\textit{bedorigin} aFk9jyUCA8GNDUWjO7fTP agudo)
 \end{itemize}
-\item[2.] (\textbf{aloc-1} 09090909091 110b genero--Masculino genero--Masculino)
+\item[2.] (\textbf{allocate} a9p3dADZjkRI7lIP3ndf1 a3cxyyl1DCgde9mICuYLv oncologia longapermanencia clinico agudo masculino adulto minimos)
 \begin{itemize}
-	\item[\textbullet] +(\textit{alocado} 09090909091)
-	\item[\textbullet] +(\textit{ocupado} 110b)
-	\item[\textbullet] +(\textit{in} 09090909091 110b)
-\end{itemize}
-\item[3.] (\textbf{aloc-1} 23433454353 112a genero--Feminino genero--Feminino)
-\begin{itemize}
-	\item[\textbullet] +(\textit{alocado} 23433454353)
-	\item[\textbullet] +(\textit{ocupado} 112a)
-	\item[\textbullet] +(\textit{in} 23433454353 112a)
-\end{itemize}
-\item[4.] (\textbf{aloc-1} 34343434324 112d genero--Feminino genero--Feminino)
-\begin{itemize}
-	\item[\textbullet] +(\textit{alocado} 34343434324)
-	\item[\textbullet] +(\textit{ocupado} 112d)
-	\item[\textbullet] +(\textit{in} 34343434324 112d)
+	\item[\textbullet] Positive predicates missing
+	\item[\textbullet] [+] (\textit{bedcare} a3cxyyl1DCgde9mICuYLv minimos)
+	\item[\textbullet] [+] (\textit{bedage} a3cxyyl1DCgde9mICuYLv adulto)
+	\item[\textbullet] [+] (\textit{bedgender} a3cxyyl1DCgde9mICuYLv masculino)
+	\item[\textbullet] [+] (\textit{bedorigin} a3cxyyl1DCgde9mICuYLv agudo)
+	\item[\textbullet] [+] (\textit{bedspecialty} a3cxyyl1DCgde9mICuYLv oncologia)
 \end{itemize}
 \end{itemize}
 

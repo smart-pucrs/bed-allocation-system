@@ -12,9 +12,9 @@
 	: true 
 <- 
 	.print("Database specialist agent enabled.");
-    getData(Data);
-	.print("Data: ");
-    .print(Data);
+//    getData(Data);
+//	.print("Data: ");
+//    .print(Data);
     .
 
 { include("$jacamoJar/templates/common-cartago.asl") }

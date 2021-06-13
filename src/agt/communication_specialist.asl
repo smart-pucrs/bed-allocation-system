@@ -10,33 +10,41 @@
 
 +!start : true <- .print("Communication specialist agent enabled.").
 
-+request(ResponseId, IntentName, Params, Contexts)
-	:true
++request(RequestedBy, ResponseId, IntentName, Params, Contexts)
+	: true
 <-
-	.print("Recebido request ",IntentName," do Dialog");
-	!responder(ResponseId, IntentName, Params, Contexts);
+	.print("Request received - ",IntentName," from Dialog");
+	!responder(RequestedBy, ResponseId, IntentName, Params, Contexts);
 	.
 	
-+!responder(ResponseId, IntentName, Params, Contexts)
++!responder(RequestedBy, ResponseId, IntentName, Params, Contexts)
 	: (IntentName == "Call Jason Agent")
 <-
 	reply("Olá, eu sou seu agente Jason, em que posso lhe ajudar?");
 	.
 
++!responder(RequestedBy, ResponseId, IntentName, Params, Contexts)
+	: (IntentName == "Get Validation Result")
+<-
 	
-+!responder(ResponseId, IntentName, Params, Contexts)
+	.print("Chatbot of ", RequestedBy, " is requesting plan validation.");
+	.send(assistant,question,getValidationResult);
+//	reply("Olá, eu sou seu agente Jason, em que posso lhe ajudar?");
+	.
+	
++!responder(RequestedBy, ResponseId, IntentName, Params, Contexts)
 	: (IntentName == "Call Intent By Event")
 <-
 	replyWithEvent("Respondendo com um evento", "testEvent");
 	.
 
-+!responder(ResponseId, IntentName, Params, Contexts)
++!responder(RequestedBy, ResponseId, IntentName, Params, Contexts)
 	: (IntentName == "Intent Called By Event")
 <-
 	reply("Respondendo a uma intenção chamada por um evento");
 	.
 	
-+!responder(ResponseId, IntentName, Params, Contexts)
++!responder(RequestedBy, ResponseId, IntentName, Params, Contexts)
 	: (IntentName == "Call With Contexts and Parameters")
 <-
 	.print("Os contextos e parâmetros serão listados a seguir.");
@@ -45,7 +53,7 @@
 	reply("Olá, eu sou seu agente Jason, recebi seus contextos e parâmetros");
 	.
 	
-+!responder(ResponseId, IntentName, Params, Contexts)
++!responder(RequestedBy, ResponseId, IntentName, Params, Contexts)
 	: (IntentName == "Call With Parameters")
 <-
 	.print("Os parâmetros serão listados a seguir.");
@@ -53,7 +61,7 @@
 	reply("Olá, eu sou seu agente Jason, recebi seus parâmetros");
 	.
 	
-+!responder(ResponseId, IntentName, Params, Contexts)
++!responder(RequestedBy, ResponseId, IntentName, Params, Contexts)
 	: (IntentName == "Call With Contexts")
 <-
 	.print("Os contextos serão listados a seguir.");
@@ -61,7 +69,7 @@
 	reply("Olá, eu sou seu agente Jason, recebi seus contextos");
 	.
 	
-+!responder(ResponseId, IntentName, Params, Contexts)
++!responder(RequestedBy, ResponseId, IntentName, Params, Contexts)
 	: (IntentName == "Reply With Context")
 <-
 	.print("O contexto será criado a seguir.");
@@ -70,7 +78,7 @@
 	replyWithContext("Olá, eu sou seu agente Jason, e estou respondendo com contexto", Context);
 	.
 	
-+!responder(ResponseId, IntentName, Params, Contexts)
++!responder(RequestedBy, ResponseId, IntentName, Params, Contexts)
 	: true
 <-
 	reply("Desculpe, não reconheço essa intensão");
@@ -95,6 +103,10 @@
 <-
     .print("hello world");
     .
+
++!kqml_received(Sender,assert,Response,MsgId)
+	<-	.print("Answering to chatbot: ", Response);
+		reply(Response).
 
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
