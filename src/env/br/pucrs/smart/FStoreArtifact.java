@@ -25,51 +25,51 @@ public class FStoreArtifact extends Artifact {
 	
 		
 
-//	@OPERATION
-//	//aloca todos os leitos
-//	void alocLeitos(Object[] value) {
-//		try{
-//			//tempo limite
-//			String aux = ((String)value[0]).split(",")[1];
-//			int segundos = Integer.valueOf(aux.substring(0,aux.length()-1));
-//			
-//			//inicializa os valores do banco de dados
-//			aloc.init();
-//			
-//			aloc.testC();
-//			int limit;
-//			//pacientes que podem ser movidos, default 0 
-//			aux = ((String)value[1]).split(",")[1];
-//			try{
-//				limit = Integer.valueOf(aux.substring(0,aux.length()-1));
-//			}catch(Exception e){
-//				limit = 0;
-//			}
-//			
-//			aloc.pacienteBL("34345454354 32323233232 54532513216".split(" "));
-//			
-//			aloc.testC();
-//			
-//			//gera o modelo dos quartos
-//			aloc.quartoOut(limit);
-//			//gera os dados dos pacientes
-//			aloc.pacienteOut();
-//			
-//			//roda o GLPSOL
-//			aloc.runAloc(segundos);
-//			System.out.println("proc");
-//			//processa o output
-//			aloc.procAloc();
-//			System.out.println("print");
-//			//printa o resultado para a tela
-//			aloc.printAloc();
-//			
-//			System.out.println("\n--------------------");
-//			
-//		}catch(Exception e){
-//			System.out.println(e);
-//		}
-//	}
+	@OPERATION
+	//aloca todos os leitos
+	void alocLeitos(Object[] value) {
+		try{
+			//tempo limite
+			String aux = ((String)value[0]).split(",")[1];
+			int segundos = Integer.valueOf(aux.substring(0,aux.length()-1));
+			
+			//inicializa os valores do banco de dados
+			aloc.init();
+			
+			aloc.testC();
+			int limit;
+			//pacientes que podem ser movidos, default 0 
+			aux = ((String)value[1]).split(",")[1];
+			try{
+				limit = Integer.valueOf(aux.substring(0,aux.length()-1));
+			}catch(Exception e){
+				limit = 0;
+			}
+			
+			aloc.pacienteBL("34345454354 32323233232 54532513216".split(" "));
+			
+			aloc.testC();
+			
+			//gera o modelo dos quartos
+			aloc.quartoOut(limit);
+			//gera os dados dos pacientes
+			aloc.pacienteOut();
+			
+			//roda o GLPSOL
+			aloc.runAloc(segundos);
+			System.out.println("proc");
+			//processa o output
+			aloc.procAloc();
+			System.out.println("print");
+			//printa o resultado para a tela
+			aloc.printAloc();
+			
+			System.out.println("\n--------------------");
+			
+		}catch(Exception e){
+			System.out.println(e);
+		}
+	}
 
 	@OPERATION
 	//aloca todos os leitos
