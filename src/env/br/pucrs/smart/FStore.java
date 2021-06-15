@@ -143,6 +143,7 @@ public class FStore extends DBConnect{
 			
 			//internacao atual 
 			Map intern = null; 
+			boolean ativo = false;
 			for(Map curIntern : (List<Map>)prontuario.get("internacoes")){
 				//internacao ativa
 				if((boolean)curIntern.get("ativo")) {
@@ -156,10 +157,12 @@ public class FStore extends DBConnect{
 					
 					//%fix%
 					if(curIntern.get("valorCuidado") != null) p.valorCuidado = Float.parseFloat(String.valueOf(curIntern.get("valorCuidado")));
-			
+					ativo = true;
 					break;
 				}
 			}
+			
+			if(!ativo) continue;
 				
 			//caracteristicas
 			p.caracts = new int[caracts.size()];
