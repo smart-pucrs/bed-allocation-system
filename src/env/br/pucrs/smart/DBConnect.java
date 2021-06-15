@@ -23,6 +23,9 @@ import java.io.InputStreamReader;
 //val
 import br.pucrs.smart.val.*;
 
+//model
+import br.pucrs.smart.models.firestore.*;
+
 public class DBConnect {
 	//informação pro glpsol
 	Map<String, Map> regras; //regras de cada tipo de quarto, e.g. regras de quartos da medicina interna
@@ -597,6 +600,36 @@ public class DBConnect {
 		}
 		file.close();
 	}	
+	
+	
+	/**************************************************
+	*	Create optimizer
+	**************************************************/
+	public OptimiserResult optInit(){		
+		List<Allocation> pAloc = new ArrayList<Allocation>();
+		for(Map.Entry<String, Paciente> mE : leitoAloc.entrySet()){
+			Allocation aux = new Allocation();
+			aux.setIdPaciente(((Paciente)mE.getValue()).id);
+			aux.setLeito((String)mE.getKey());
+			//%PLACEHOLDER%
+			aux.setPacienteData(null);
+			aux.setLeitoData(null);
+			aux.setLaudo(null);
+			pAloc.add(aux);
+		}
+		
+		List<String> pNAloc = new ArrayList<String>();
+		for(Paciente p : nAloc){
+			pNAloc.add(p.id);
+		}
+		
+		OptimiserResult out = new OptimiserResult();
+		out.setSugestedAllocation(pAloc);
+		out.setNotAllocated(pNAloc);
+		out.setAllAllocated(pNAloc.size() == 0);
+		
+		return out;
+	}
 }
 
 
@@ -634,6 +667,7 @@ class Caract {
 *	Paciente
 ***************************************************/
 class Paciente {
+	public String id;
 	public String nome;
 	public String cpf;
 	public float valorCuidado;

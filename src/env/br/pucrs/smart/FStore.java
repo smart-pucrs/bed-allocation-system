@@ -136,6 +136,7 @@ public class FStore extends DBConnect{
 			Map prontuario = snap.getData();
 			Map paciente = (Map)prontuario.get("paciente");
 			//nome e cpf
+			p.id = (String)prontuario.get("idPaciente");
 			p.nome = (String)paciente.get("nome");
 			p.cpf = (String)paciente.get("cpf");
 			p.valorCuidado = 0;
