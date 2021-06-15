@@ -68,7 +68,7 @@ public class FirebaseFirestoreReactive {
 						Validacao validation = new Validacao();
 						if (body != null) {
 							TempAloc temp = gson.fromJson(body, TempAloc.class);
-							
+							if (!temp.isValidated()) {
 							for (Allocation alloc : temp.getAllocation()) {
 								try {
 									LaudosInternacao laudo = new LaudosInternacao();
@@ -90,7 +90,7 @@ public class FirebaseFirestoreReactive {
 							}
 
 							mas.receiveValidation(validation);
-
+							}
 						}
 						break;
 					case MODIFIED:

@@ -8,7 +8,7 @@
 
 /* Plans */
 
-+!start : true <- .print("Optimiser agent enabled.").
++!start : true <- .print("Optimiser agent enabled."); alocLeitos(R).
 
 +!getOptimisedAllocation(Response)
 <-
