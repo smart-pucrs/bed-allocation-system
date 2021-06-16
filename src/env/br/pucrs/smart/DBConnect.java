@@ -607,20 +607,24 @@ public class DBConnect {
 	**************************************************/
 	public OptimiserResult optInit(){		
 		List<Allocation> pAloc = new ArrayList<Allocation>();
-		for(Map.Entry<String, Paciente> mE : leitoAloc.entrySet()){
-			Allocation aux = new Allocation();
-			aux.setIdPaciente(((Paciente)mE.getValue()).id);
-			aux.setLeito((String)mE.getKey());
-			//%PLACEHOLDER%
-			aux.setPacienteData(null);
-			aux.setLeitoData(null);
-			aux.setLaudo(null);
-			pAloc.add(aux);
+		if(leitoAloc != null){
+			for(Map.Entry<String, Paciente> mE : leitoAloc.entrySet()){
+				Allocation aux = new Allocation();
+				aux.setIdPaciente(((Paciente)mE.getValue()).id);
+				aux.setLeito((String)mE.getKey());
+				//%PLACEHOLDER%
+				aux.setPacienteData(null);
+				aux.setLeitoData(null);
+				aux.setLaudo(null);
+				pAloc.add(aux);
+			}
 		}
 		
 		List<String> pNAloc = new ArrayList<String>();
-		for(Paciente p : nAloc){
-			pNAloc.add(p.id);
+		if(nAloc != null){
+			for(Paciente p : nAloc){
+				pNAloc.add(p.id);
+			}
 		}
 		
 		OptimiserResult out = new OptimiserResult();
