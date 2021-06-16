@@ -52,13 +52,28 @@ public class OptimiserResult {
 	public void setLeitosData(List<Leito> leitosData) {
 		this.leitosData = leitosData;
 	}
+	public void addLeitosData(Leito leito) {
+		if (this.leitosData != null) {
+			this.leitosData.add(leito);
+		} else {
+			this.leitosData = new ArrayList<Leito>();
+			this.leitosData.add(leito);
+		}
+	}	
 	public List<LaudosInternacao> getLaudosData() {
 		return laudosData;
 	}
 	public void setLaudosData(List<LaudosInternacao> laudosData) {
 		this.laudosData = laudosData;
 	}
-	
+	public void addLaudosData(LaudosInternacao laudo) {
+		if (this.laudosData != null) {
+			this.laudosData.add(laudo);
+		} else {
+			this.laudosData = new ArrayList<LaudosInternacao>();
+			this.laudosData.add(laudo);
+		}
+	}	
 	
 	@Override
 	public String toString() {
