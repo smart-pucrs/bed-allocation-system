@@ -1,8 +1,14 @@
 // CArtAgO artifact code for project smart
 
 package br.pucrs.smart;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 import br.pucrs.smart.models.firestore.OptimiserResult;
-import cartago.*;
+import br.pucrs.smart.models.firestore.Paciente;
+import cartago.Artifact;
+import cartago.OPERATION;
+import cartago.OpFeedbackParam;
 import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Literal;
 
@@ -27,59 +33,25 @@ public class FStoreArtifact extends Artifact {
 			aloc.procAloc();
 			OptimiserResult result = aloc.optInit();
 			System.out.println(result.toString());
+			
+			
 			response.set("Ok, gerei uma alocação otimizada mantendo o maior número possível de quartos livres e deixando os pacientes mais graves próximos da sala de enfermagem. Você pode vê-la clicando aqui: https://explainable-agent.firebaseapp.com/optimized");
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 	}
 	
+	// return a list of notAloc([PacienteName])
+	Literal createParamBelief(List<String> idsPaciente) throws InterruptedException, ExecutionException {
+			
+			Literal l = ASSyntax.createLiteral("notAloc");
+			for (String id : idsPaciente) {
+				Paciente p = FirebaseDb.getPacienteById(id);
+				l.addTerm(ASSyntax.createString(p.getNome()));
+			}
+			return l;
+		}
 		
-
-//	@OPERATION
-//	//aloca todos os leitos
-//	void alocLeitos(Object[] value) {
-//		try{
-//			//tempo limite
-//			String aux = ((String)value[0]).split(",")[1];
-//			int segundos = Integer.valueOf(aux.substring(0,aux.length()-1));
-//			
-//			//inicializa os valores do banco de dados
-//			aloc.init();
-//			
-//			aloc.testC();
-//			int limit;
-//			//pacientes que podem ser movidos, default 0 
-//			aux = ((String)value[1]).split(",")[1];
-//			try{
-//				limit = Integer.valueOf(aux.substring(0,aux.length()-1));
-//			}catch(Exception e){
-//				limit = 0;
-//			}
-//			
-//			aloc.pacienteBL("34345454354 32323233232 54532513216".split(" "));
-//			
-//			aloc.testC();
-//			
-//			//gera o modelo dos quartos
-//			aloc.quartoOut(limit);
-//			//gera os dados dos pacientes
-//			aloc.pacienteOut();
-//			
-//			//roda o GLPSOL
-//			aloc.runAloc(segundos);
-//			System.out.println("proc");
-//			//processa o output
-//			aloc.procAloc();
-//			System.out.println("print");
-//			//printa o resultado para a tela
-//			aloc.printAloc();
-//			
-//			System.out.println("\n--------------------");
-//			
-//		}catch(Exception e){
-//			System.out.println(e);
-//		}
-//	}
 
 	@OPERATION
 	//aloca todos os leitos
@@ -93,3 +65,4 @@ public class FStoreArtifact extends Artifact {
 	}
 }
 
+;

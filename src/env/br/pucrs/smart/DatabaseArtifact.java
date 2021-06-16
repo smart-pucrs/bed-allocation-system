@@ -37,6 +37,7 @@ public class DatabaseArtifact extends Artifact {
 
 			db = FirestoreClient.getFirestore(); 
 			new FirebaseFirestoreReactive(db);
+			new FirebaseDb(db);
 		    
 
 		} catch (IOException e) {

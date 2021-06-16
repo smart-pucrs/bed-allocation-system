@@ -8,6 +8,10 @@ public class OptimiserResult {
 	private boolean allAllocated;
 	private List<Allocation> sugestedAllocation; // use only idPaciente and leito
 	private List<String> notAllocated; // List with idPaciente
+	private List<Leito> leitosData;
+	private List<LaudosInternacao> laudosData;
+	
+	
 	public boolean isAllAllocated() {
 		return allAllocated;
 	}
@@ -41,7 +45,20 @@ public class OptimiserResult {
 			this.notAllocated = new ArrayList<String>();
 			this.notAllocated.add(idPaciente);
 		}
+	}	
+	public List<Leito> getLeitosData() {
+		return leitosData;
 	}
+	public void setLeitosData(List<Leito> leitosData) {
+		this.leitosData = leitosData;
+	}
+	public List<LaudosInternacao> getLaudosData() {
+		return laudosData;
+	}
+	public void setLaudosData(List<LaudosInternacao> laudosData) {
+		this.laudosData = laudosData;
+	}
+	
 	
 	@Override
 	public String toString() {
@@ -62,6 +79,24 @@ public class OptimiserResult {
 	        sb.append(" notAllocated : [");
 	        for (String s : notAllocated) {
 		        sb.append(s);
+		        sb.append(", ");
+	        }
+	        sb.append("] ");
+	    }
+        if (leitosData != null) {
+            sb.append(", ");
+	        sb.append(" leitosData : [");
+	        for (Leito l : leitosData) {
+		        sb.append(l.toString());
+		        sb.append(", ");
+	        }
+	        sb.append("] ");
+	    }
+        if (laudosData != null) {
+            sb.append(", ");
+	        sb.append(" laudosData : [");
+	        for (LaudosInternacao l : laudosData) {
+		        sb.append(l.toString());
 		        sb.append(", ");
 	        }
 	        sb.append("] ");
