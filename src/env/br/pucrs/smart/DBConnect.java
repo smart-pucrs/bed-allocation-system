@@ -609,6 +609,7 @@ public class DBConnect {
 		List<Allocation> pAloc = new ArrayList<Allocation>();
 		if(leitoAloc != null){
 			for(Map.Entry<String, Paciente> mE : leitoAloc.entrySet()){
+				if(mE.getValue() == null) continue;
 				Allocation aux = new Allocation();
 				aux.setIdPaciente(((Paciente)mE.getValue()).id);
 				aux.setLeito((String)mE.getKey());

@@ -21,10 +21,16 @@ public class FStoreArtifact extends Artifact {
 	void alocLeitos(OpFeedbackParam<String> response) {
 		if(aloc == null) init();
 		System.out.println("operation called");
-		System.out.println(aloc);
-		OptimiserResult result = aloc.optInit();
-		System.out.println(result.toString());
-		response.set("Ok, gerei uma alocação otimizada mantendo o maior número possível de quartos livres e deixando os pacientes mais graves próximos da sala de enfermagem. Você pode vê-la clicando aqui: https://explainable-agent.firebaseapp.com/optimized");
+		try{
+			aloc.init();
+			aloc.runAloc(10); //10 segundos max
+			aloc.procAloc();
+			OptimiserResult result = aloc.optInit();
+			System.out.println(result.toString());
+			response.set("Ok, gerei uma alocação otimizada mantendo o maior número possível de quartos livres e deixando os pacientes mais graves próximos da sala de enfermagem. Você pode vê-la clicando aqui: https://explainable-agent.firebaseapp.com/optimized");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 		
