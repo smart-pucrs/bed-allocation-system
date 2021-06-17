@@ -140,6 +140,7 @@ public class FStore extends DBConnect{
 			p.nome = (String)paciente.get("nome");
 			p.cpf = (String)paciente.get("cpf");
 			p.valorCuidado = 0;
+			p.leitoP = "";
 			
 			//internacao atual 
 			Map intern = null; 
@@ -153,6 +154,7 @@ public class FStore extends DBConnect{
 					if((boolean)curIntern.get("internado")) {
 						String leito = (String)((Map)curIntern.get("leito")).get("numero");
 						leitoAloc.put(leito,p);
+						p.leitoP = leito;
 					}
 					
 					//%fix%

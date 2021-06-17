@@ -609,7 +609,10 @@ public class DBConnect {
 		List<Allocation> pAloc = new ArrayList<Allocation>();
 		if(leitoAloc != null){
 			for(Map.Entry<String, Paciente> mE : leitoAloc.entrySet()){
-				if(mE.getValue() == null) continue;
+				//sem paciente
+				if(mE.getValue() == null) continue; 
+				//paciente nao movido 
+				if(mE.getKey().equals(((Paciente)mE.getValue()).leitoP)) continue;
 				Allocation aux = new Allocation();
 				aux.setIdPaciente(((Paciente)mE.getValue()).id);
 				aux.setLeito((String)mE.getKey());
@@ -676,5 +679,6 @@ class Paciente {
 	public String nome;
 	public String cpf;
 	public float valorCuidado;
+	public String leitoP;
 	int[] caracts;
 }
