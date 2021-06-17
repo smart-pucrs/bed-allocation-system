@@ -8,10 +8,12 @@ import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.WriteResult;
 import com.google.gson.Gson;
 
 import br.pucrs.smart.models.firestore.LaudosInternacao;
 import br.pucrs.smart.models.firestore.Leito;
+import br.pucrs.smart.models.firestore.OptimiserResult;
 import br.pucrs.smart.models.firestore.Paciente;
 
 public class FirebaseDb {
@@ -53,6 +55,8 @@ public class FirebaseDb {
 		if (document.exists()) {
 			// convert document to POJO
 			Leito leito = document.toObject(Leito.class);
+
+//			System.out.println(leito.toString());
 			return leito;
 		} else {
 			System.out.println("No such document!");
@@ -71,12 +75,18 @@ public class FirebaseDb {
 		if (document.exists()) {
 			// convert document to POJO
 			LaudosInternacao laudos = document.toObject(LaudosInternacao.class);
+//			System.out.println(laudos.toString());
 			return laudos;
 		} else {
 			System.out.println("No such document!");
 		}
 		}
 		return null;
+	}
+	
+	public static String addOptimiserResult(OptimiserResult op) throws InterruptedException, ExecutionException {
+		ApiFuture<DocumentReference> addedDocRef = db.collection("optimiserResult").add(op);
+		return "Added document with ID: " + addedDocRef.get().getId();
 	}
 
 }

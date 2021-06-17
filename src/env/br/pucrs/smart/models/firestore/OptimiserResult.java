@@ -10,7 +10,7 @@ public class OptimiserResult {
 	private List<String> notAllocated; // List with idPaciente
 	private List<Leito> leitosData;
 	private List<LaudosInternacao> laudosData;
-	
+	private boolean alreadySuggested;
 	
 	public boolean isAllAllocated() {
 		return allAllocated;
@@ -73,7 +73,13 @@ public class OptimiserResult {
 			this.laudosData = new ArrayList<LaudosInternacao>();
 			this.laudosData.add(laudo);
 		}
-	}	
+	}
+	public boolean isAlreadySuggested() {
+		return alreadySuggested;
+	}
+	public void setAlreadySuggested(boolean alreadySuggested) {
+		this.alreadySuggested = alreadySuggested;
+	}
 	
 	@Override
 	public String toString() {
@@ -116,6 +122,9 @@ public class OptimiserResult {
 	        }
 	        sb.append("] ");
 	    }
+        sb.append(", ");
+	    sb.append(" alreadySuggested : ");
+        sb.append(alreadySuggested);
 	    sb.append("} ");
 		return sb.toString();
 	}
