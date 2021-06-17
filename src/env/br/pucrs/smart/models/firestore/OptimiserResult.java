@@ -8,6 +8,10 @@ public class OptimiserResult {
 	private boolean allAllocated;
 	private List<Allocation> sugestedAllocation; // use only idPaciente and leito
 	private List<String> notAllocated; // List with idPaciente
+	private List<Leito> leitosData;
+	private List<LaudosInternacao> laudosData;
+	private boolean alreadySuggested;
+	
 	public boolean isAllAllocated() {
 		return allAllocated;
 	}
@@ -41,6 +45,40 @@ public class OptimiserResult {
 			this.notAllocated = new ArrayList<String>();
 			this.notAllocated.add(idPaciente);
 		}
+	}	
+	public List<Leito> getLeitosData() {
+		return leitosData;
+	}
+	public void setLeitosData(List<Leito> leitosData) {
+		this.leitosData = leitosData;
+	}
+	public void addLeitosData(Leito leito) {
+		if (this.leitosData != null) {
+			this.leitosData.add(leito);
+		} else {
+			this.leitosData = new ArrayList<Leito>();
+			this.leitosData.add(leito);
+		}
+	}	
+	public List<LaudosInternacao> getLaudosData() {
+		return laudosData;
+	}
+	public void setLaudosData(List<LaudosInternacao> laudosData) {
+		this.laudosData = laudosData;
+	}
+	public void addLaudosData(LaudosInternacao laudo) {
+		if (this.laudosData != null) {
+			this.laudosData.add(laudo);
+		} else {
+			this.laudosData = new ArrayList<LaudosInternacao>();
+			this.laudosData.add(laudo);
+		}
+	}
+	public boolean isAlreadySuggested() {
+		return alreadySuggested;
+	}
+	public void setAlreadySuggested(boolean alreadySuggested) {
+		this.alreadySuggested = alreadySuggested;
 	}
 	
 	@Override
@@ -66,6 +104,27 @@ public class OptimiserResult {
 	        }
 	        sb.append("] ");
 	    }
+        if (leitosData != null) {
+            sb.append(", ");
+	        sb.append(" leitosData : [");
+	        for (Leito l : leitosData) {
+		        sb.append(l.toString());
+		        sb.append(", ");
+	        }
+	        sb.append("] ");
+	    }
+        if (laudosData != null) {
+            sb.append(", ");
+	        sb.append(" laudosData : [");
+	        for (LaudosInternacao l : laudosData) {
+		        sb.append(l.toString());
+		        sb.append(", ");
+	        }
+	        sb.append("] ");
+	    }
+        sb.append(", ");
+	    sb.append(" alreadySuggested : ");
+        sb.append(alreadySuggested);
 	    sb.append("} ");
 		return sb.toString();
 	}
