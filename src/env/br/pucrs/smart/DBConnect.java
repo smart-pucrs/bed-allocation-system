@@ -607,6 +607,7 @@ public class DBConnect {
 	**************************************************/
 	public OptimiserResult optInit(){		
 		List<Allocation> pAloc = new ArrayList<Allocation>();
+		List<LaudosInternacao> laudosData = new ArrayList<LaudosInternacao>();
 		if(leitoAloc != null){
 			for(Map.Entry<String, Paciente> mE : leitoAloc.entrySet()){
 				//sem paciente
@@ -621,6 +622,7 @@ public class DBConnect {
 				aux.setLeitoData(null);
 				aux.setLaudo(null);
 				pAloc.add(aux);
+				laudosData.add(((Paciente)mE.getValue()).laudo);
 			}
 		}
 		
@@ -633,6 +635,7 @@ public class DBConnect {
 		
 		OptimiserResult out = new OptimiserResult();
 		out.setSugestedAllocation(pAloc);
+		out.setLaudosData(laudosData);
 		out.setNotAllocated(pNAloc);
 		out.setAllAllocated(pNAloc.size() == 0);
 		
@@ -647,12 +650,14 @@ public class DBConnect {
 ***************************************************/
 class Quarto {
 	public List<String> leitos;
+	public List<Leito> leitosL;
 	public List<Map> tipo;
 	public String tipoID;
 	public float valorCuidado;
 	
 	public Quarto(){
 		leitos = new ArrayList();
+		leitosL = new ArrayList();
 	}
 }
 
@@ -681,4 +686,5 @@ class Paciente {
 	public float valorCuidado;
 	public String leitoP;
 	int[] caracts;
+	LaudosInternacao laudo;
 }

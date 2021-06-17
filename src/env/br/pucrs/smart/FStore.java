@@ -31,6 +31,8 @@ import java.io.IOException;
 import java.lang.InterruptedException;
 import java.util.concurrent.ExecutionException;
 
+import br.pucrs.smart.models.firestore.*;
+
 
 public class FStore extends DBConnect{
 	//firestore
@@ -121,7 +123,6 @@ public class FStore extends DBConnect{
 		}		
 	}
 	
-	
 	/**************************************************
 	*	Inicializa os valores dos pacientes para o GLPSol
 	***************************************************/
@@ -135,6 +136,7 @@ public class FStore extends DBConnect{
 			Paciente p = new Paciente();
 			Map prontuario = snap.getData();
 			Map paciente = (Map)prontuario.get("paciente");
+			LaudosInternacao laudo = new LaudosInternacao();
 			//nome e cpf
 			p.id = (String)prontuario.get("idPaciente");
 			p.nome = (String)paciente.get("nome");
@@ -148,13 +150,47 @@ public class FStore extends DBConnect{
 			for(Map curIntern : (List<Map>)prontuario.get("internacoes")){
 				//internacao ativa
 				if((boolean)curIntern.get("ativo")) {
+					//leito
+					Leito leito = new Leito();
+					Map lMap = (Map)curIntern.get("leito");
+					leito.setAge((String)curIntern.get("age"));
+					leito.setEspecialidade((String)curIntern.get("especialidade"));
+					leito.setGenero((String)curIntern.get("genero"));
+					leito.setNumero((String)curIntern.get("numero"));
+					//leito.setPaciente((String)curIntern.get("numero"));
+					leito.setQuarto((String)curIntern.get("quarto"));
+					leito.setStatus((String)curIntern.get("status"));
+					leito.setTipoDeCuidado((String)curIntern.get("tipoDeCuidado"));
+					leito.setTipoDeEncaminhamento((String)curIntern.get("tipoDeEncaminhamento"));
+					leito.setTipoDeEstadia((String)curIntern.get("tipoDeEstadia"));
+					leito.setTipoDeLeito((String)curIntern.get("tipoDeLeito"));
+					leito.setBirthtype((String)curIntern.get("birthtype"));
+					leito.setDist((String)curIntern.get("dist"));
+					//laudo
+					laudo.setAtivo(true);
+					laudo.setAge((String)curIntern.get("age"));
+					laudo.setCrmMedico((String)curIntern.get("crmMedico"));
+					laudo.setDataInternacao((Integer)(int)(long)curIntern.get("dataInternacao"));
+					laudo.setGenero((String)curIntern.get("genero"));
+					laudo.setId((String)curIntern.get("id"));
+					laudo.setIdPaciente((String)curIntern.get("idPaciente"));
+					laudo.setInternado((boolean)curIntern.get("internado"));
+					laudo.setLeito(leito);
+					laudo.setMedicoResponsavel((String)curIntern.get("medicoResponsavel"));
+					laudo.setProntuario((String)curIntern.get("prontuario"));
+					laudo.setTipoDeCuidado((String)curIntern.get("tipoDeCuidado"));
+					laudo.setTipoDeEncaminhamento((String)curIntern.get("tipoDeEncaminhamento"));
+					laudo.setTipoDeEstadia((String)curIntern.get("tipoDeEstadia"));
+					laudo.setTipoDeLeito((String)curIntern.get("tipoDeLeito"));
+					laudo.setBirthtype((String)curIntern.get("birthtype"));
+					p.laudo = laudo;
 					
 					intern = curIntern;
 					//internado
 					if((boolean)curIntern.get("internado")) {
-						String leito = (String)((Map)curIntern.get("leito")).get("numero");
-						leitoAloc.put(leito,p);
-						p.leitoP = leito;
+						String leitoS = (String)((Map)curIntern.get("leito")).get("numero");
+						leitoAloc.put(leitoS,p);
+						p.leitoP = leitoS;
 					}
 					
 					//%fix%
@@ -236,7 +272,7 @@ public class FStore extends DBConnect{
 	
 	
 	/**************************************************
-	*	Inicializa todos os valores do bando de dados
+	*	Inicializa todos os valores do banco de dados
 	***************************************************/
 	public void init() throws ExecutionException, InterruptedException{
 		initQuartos();
