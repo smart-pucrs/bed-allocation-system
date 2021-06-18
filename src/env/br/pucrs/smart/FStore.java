@@ -132,13 +132,13 @@ public class FStore extends DBConnect{
 		pacientes = new ArrayList<>();
 		pacientesMap = new HashMap<>();
 		leitoAloc = new HashMap<String, Paciente>();
-		for(QueryDocumentSnapshot snap: db.collection("prontuarios").get().get().getDocuments()){
+		for(QueryDocumentSnapshot snap: db.collection("laudosInternacao").get().get().getDocuments()){
 			Paciente p = new Paciente();
-			Map prontuario = snap.getData();
-			Map paciente = (Map)prontuario.get("paciente");
+			Map laudoIntern = snap.getData();
+			Map paciente = (Map)db.collection("pacientes").document((String)laudoIntern.get("idPaciente")).get().get().getData();
 			LaudosInternacao laudo = new LaudosInternacao();
 			//nome e cpf
-			p.id = (String)prontuario.get("idPaciente");
+			p.id = (String)laudoIntern.get("idPaciente");
 			p.nome = (String)paciente.get("nome");
 			p.cpf = (String)paciente.get("cpf");
 			p.valorCuidado = 0;
@@ -147,60 +147,60 @@ public class FStore extends DBConnect{
 			//internacao atual 
 			Map intern = null; 
 			boolean ativo = false;
-			for(Map curIntern : (List<Map>)prontuario.get("internacoes")){
-				//internacao ativa
-				if((boolean)curIntern.get("ativo")) {
-					//leito
-					Leito leito = new Leito();
-					Map lMap = (Map)curIntern.get("leito");
-					leito.setAge((String)curIntern.get("age"));
-					leito.setEspecialidade((String)curIntern.get("especialidade"));
-					leito.setGenero((String)curIntern.get("genero"));
-					leito.setNumero((String)curIntern.get("numero"));
-					//leito.setPaciente((String)curIntern.get("numero"));
-					leito.setQuarto((String)curIntern.get("quarto"));
-					leito.setStatus((String)curIntern.get("status"));
-					leito.setTipoDeCuidado((String)curIntern.get("tipoDeCuidado"));
-					leito.setTipoDeEncaminhamento((String)curIntern.get("tipoDeEncaminhamento"));
-					leito.setTipoDeEstadia((String)curIntern.get("tipoDeEstadia"));
-					leito.setTipoDeLeito((String)curIntern.get("tipoDeLeito"));
-					leito.setBirthtype((String)curIntern.get("birthtype"));
-					leito.setDist((String)curIntern.get("dist"));
-					//laudo
-					laudo.setAtivo(true);
-					laudo.setAge((String)curIntern.get("age"));
-					laudo.setCrmMedico((String)curIntern.get("crmMedico"));
-					laudo.setDataInternacao((Integer)(int)(long)curIntern.get("dataInternacao"));
-					laudo.setGenero((String)curIntern.get("genero"));
-					laudo.setId((String)curIntern.get("id"));
-					laudo.setIdPaciente((String)curIntern.get("idPaciente"));
-					laudo.setInternado((boolean)curIntern.get("internado"));
-					laudo.setLeito(leito);
-					laudo.setMedicoResponsavel((String)curIntern.get("medicoResponsavel"));
-					laudo.setProntuario((String)curIntern.get("prontuario"));
-					laudo.setTipoDeCuidado((String)curIntern.get("tipoDeCuidado"));
-					laudo.setTipoDeEncaminhamento((String)curIntern.get("tipoDeEncaminhamento"));
-					laudo.setTipoDeEstadia((String)curIntern.get("tipoDeEstadia"));
-					laudo.setTipoDeLeito((String)curIntern.get("tipoDeLeito"));
-					laudo.setBirthtype((String)curIntern.get("birthtype"));
-					p.laudo = laudo;
-					
-					intern = curIntern;
-					//internado
-					if((boolean)curIntern.get("internado")) {
-						String leitoS = (String)((Map)curIntern.get("leito")).get("numero");
-						leitoAloc.put(leitoS,p);
-						p.leitoP = leitoS;
-					}
-					
-					//%fix%
-					if(curIntern.get("valorCuidado") != null) p.valorCuidado = Float.parseFloat(String.valueOf(curIntern.get("valorCuidado")));
-					ativo = true;
-					break;
+			//internacao ativa
+			if((boolean)laudoIntern.get("ativo")) {
+				//leito
+				Leito leito = new Leito();
+				Map lMap = (Map)laudoIntern.get("leito");
+				leito.setAge((String)laudoIntern.get("age"));
+				leito.setEspecialidade((String)laudoIntern.get("especialidade"));
+				leito.setGenero((String)laudoIntern.get("genero"));
+				leito.setNumero((String)laudoIntern.get("numero"));
+				//leito.setPaciente((String)laudoIntern.get("numero"));
+				leito.setQuarto((String)laudoIntern.get("quarto"));
+				leito.setStatus((String)laudoIntern.get("status"));
+				leito.setTipoDeCuidado((String)laudoIntern.get("tipoDeCuidado"));
+				leito.setTipoDeEncaminhamento((String)laudoIntern.get("tipoDeEncaminhamento"));
+				leito.setTipoDeEstadia((String)laudoIntern.get("tipoDeEstadia"));
+				leito.setTipoDeLeito((String)laudoIntern.get("tipoDeLeito"));
+				leito.setBirthtype((String)laudoIntern.get("birthtype"));
+				leito.setDist((String)laudoIntern.get("dist"));
+				//laudo
+				laudo.setAtivo(true);
+				laudo.setAge((String)laudoIntern.get("age"));
+				laudo.setCrmMedico((String)laudoIntern.get("crmMedico"));
+				laudo.setGenero((String)laudoIntern.get("genero"));
+				laudo.setId((String)laudoIntern.get("id"));
+				laudo.setIdPaciente((String)laudoIntern.get("idPaciente"));
+				laudo.setInternado((boolean)laudoIntern.get("internado"));
+				laudo.setLeito(leito);
+				laudo.setMedicoResponsavel((String)laudoIntern.get("medicoResponsavel"));
+				laudo.setProntuario((String)laudoIntern.get("prontuario"));
+				laudo.setTipoDeCuidado((String)laudoIntern.get("tipoDeCuidado"));
+				laudo.setTipoDeEncaminhamento((String)laudoIntern.get("tipoDeEncaminhamento"));
+				laudo.setTipoDeEstadia((String)laudoIntern.get("tipoDeEstadia"));
+				laudo.setTipoDeLeito((String)laudoIntern.get("tipoDeLeito"));
+				laudo.setBirthtype((String)laudoIntern.get("birthtype"));
+				p.laudo = laudo;
+				
+				intern = laudoIntern;
+				//internado
+				if((boolean)laudoIntern.get("internado")) {
+					laudo.setDataInternacao((Integer)(int)(long)laudoIntern.get("dataInternacao"));
+					String leitoS = (String)((Map)laudoIntern.get("leito")).get("numero");
+					System.out.println(p.nome);
+					System.out.println(leitoS);
+					leitoAloc.put(leitoS,p);
+					System.out.println(leitoAloc);
+					p.leitoP = leitoS;
 				}
+				System.out.println("");
+				//%fix%
+				if(laudoIntern.get("valorCuidado") != null) p.valorCuidado = Float.parseFloat(String.valueOf(laudoIntern.get("valorCuidado")));
+				ativo = true;
+			}else{
+				continue;
 			}
-			
-			if(!ativo) continue;
 				
 			//caracteristicas
 			p.caracts = new int[caracts.size()];
@@ -259,6 +259,7 @@ public class FStore extends DBConnect{
 		leitoAlocEx = new HashMap();
 		for(QueryDocumentSnapshot snap: db.collection("excecoes").get().get().getDocuments()){
 			String quarto = (String)snap.getData().get("quarto");
+			if(quartos.get(quarto) == null) continue;
 			for(String leito : quartos.get(quarto).leitos){
 				Paciente p = leitoAloc.remove(leito);
 				if(p != null){

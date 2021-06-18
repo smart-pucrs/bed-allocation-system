@@ -36,7 +36,7 @@ public class DBConnect {
 	Map<String, Caract> caractMap; //nome da caracteristica -> objeto da caracteristica; 
 	Map<String, Paciente> leitoAloc; //leito -> paciente; 
 	
-	private final String GLPSol = "/opt/bin/glpsol"; //localizacao do glpsol
+	private final String GLPSol = "a:\\Programs\\glpk-4.65\\w64\\glpsol.exe"; //localizacao do glpsol
 	private Process glpsol; //processo do glpsol
 	BufferedReader out; //output do glpsol
 	private int maxMinT = 1; //tipo de criterio de maximizacao

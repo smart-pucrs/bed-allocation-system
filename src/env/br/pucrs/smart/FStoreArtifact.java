@@ -34,6 +34,7 @@ public class FStoreArtifact extends Artifact {
 		System.out.println("operation called");
 		try {
 			aloc.init();
+			aloc.initExcecoes();
 			aloc.quartoOut(0);
 			aloc.pacienteOut();
 			aloc.runAloc(10); // 10 segundos max
