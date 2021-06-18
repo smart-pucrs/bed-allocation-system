@@ -40,13 +40,14 @@ public class FStoreArtifact extends Artifact {
 			aloc.runAloc(10); // 10 segundos max
 			aloc.procAloc();
 			OptimiserResult result = aloc.optInit();
+			System.out.println("----------------------- result");
 			System.out.println(result.toString());
-			OptimiserResult optimiserResult = getData(result);
-			System.out.println(optimiserResult.toString());
+			// OptimiserResult optimiserResult = getData(result);
+			// System.out.println(optimiserResult.toString());
 //			String r = FirebaseDb.addOptimiserResult(optimiserResult);
 //			System.out.println(r);
 			response.set(
-					"Ok, gerei uma alocação otimizada mantendo o maior número possível de quartos livres e deixando os pacientes mais graves próximos da sala de enfermagem. Você pode vê-la clicando aqui: https://explainable-agent.firebaseapp.com/optimized");
+					"Ok, gerei uma alocação otimizada mantendo o maior número possível de quartos livres e deixando os pacientes mais graves próximos da sala de enfermagem. Você pode vê-la clicando aqui: https://explainable-agent.firebaseapp.com/page/optimised");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
