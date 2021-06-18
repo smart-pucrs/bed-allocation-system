@@ -622,6 +622,9 @@ public class DBConnect {
 				aux.setLeitoData(null);
 				aux.setLaudo(null);
 				pAloc.add(aux);
+				Leito lt = new Leito();
+				lt.setNumero((String)mE.getKey());
+				((Paciente)mE.getValue()).laudo.setLeito(lt);
 				laudosData.add(((Paciente)mE.getValue()).laudo);
 			}
 		}

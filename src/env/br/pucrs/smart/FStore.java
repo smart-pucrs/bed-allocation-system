@@ -172,6 +172,7 @@ public class FStore extends DBConnect{
 				laudo.setGenero((String)laudoIntern.get("genero"));
 				laudo.setId((String)laudoIntern.get("id"));
 				laudo.setIdPaciente((String)laudoIntern.get("idPaciente"));
+				laudo.setNomePaciente(p.nome);
 				laudo.setInternado((boolean)laudoIntern.get("internado"));
 				laudo.setLeito(leito);
 				laudo.setMedicoResponsavel((String)laudoIntern.get("medicoResponsavel"));
