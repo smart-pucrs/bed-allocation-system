@@ -92,10 +92,27 @@ public class FStore extends DBConnect{
 		}
 		
 		//inicializa os quartos e leitos
+		leitos = new HashMap<>();
 		quartos = new HashMap<>();
 		for(QueryDocumentSnapshot leito : db.collection("leitos").get().get().getDocuments()){
 			String quartoNam = leito.getString("quarto");
 			String leitoNam = leito.getString("numero");
+			Leito l = new Leito();
+			l.setAge(leito.getString("age"));
+			l.setEspecialidade(leito.getString("especialidade"));
+			l.setGenero(leito.getString("genero"));
+			l.setId(leito.getString("id"));
+			l.setNumero(leito.getString("numero"));
+			l.setQuarto(leito.getString("quarto"));
+			l.setStatus(leito.getString("status"));
+			l.setTipoDeCuidado(leito.getString("tipoDeCuidado"));
+			l.setTipoDeEncaminhamento(leito.getString("tipoDeEncaminhamento"));
+			l.setTipoDeEstadia(leito.getString("tipoDeEstadia"));
+			l.setTipoDeLeito(leito.getString("tipoDeLeito"));
+			//l.setBirthtype(leito.getString("birthtype"));
+			l.setDist(leito.getString("dist"));
+			leitos.put(leitoNam, l);
+			
 			//%fix%
 			float valorCuidado = 1000 - Float.parseFloat(String.valueOf(leito.get("dist")));
 			

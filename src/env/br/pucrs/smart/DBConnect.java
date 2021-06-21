@@ -30,6 +30,7 @@ public class DBConnect {
 	//informação pro glpsol
 	Map<String, Map> regras; //regras de cada tipo de quarto, e.g. regras de quartos da medicina interna
 	Map<String, Quarto> quartos; //nome do quarto -> objeto do quarto(leitos e regras) 
+	Map<String, Leito> leitos; //nome do leito -> objeto do leito
 	Map<String, Paciente> pacientesMap; //cpf -> objeto1 do paciente 
 	List<Paciente> pacientes; // Lista de pacientes 
 	List<Caract> caracts; //lista de todas caracteristicas possiveis (e.g genero=[masculino,feminino])
@@ -622,8 +623,7 @@ public class DBConnect {
 				aux.setLeitoData(null);
 				aux.setLaudo(null);
 				pAloc.add(aux);
-				Leito lt = new Leito();
-				lt.setNumero((String)mE.getKey());
+				Leito lt = leitos.get((String)mE.getKey());
 				((Paciente)mE.getValue()).laudo.setLeito(lt);
 				laudosData.add(((Paciente)mE.getValue()).laudo);
 			}
