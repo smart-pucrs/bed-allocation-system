@@ -33,3 +33,4 @@ You will find all the necessary documentation in our [Wiki](https://github.com/s
 - Java 11
 - Gradle 6.8.3
 - JaCaMo  0.9
+- [GLPSol 4.6+](https://github.com/smart-pucrs/bed-allocation-system/wiki/Installing-GLPSol)
