@@ -78,6 +78,9 @@ var reserva{p in PACIENTE} binary;
 /* garante que o paciente so esta em um quarto */
 s.t. pacienteQuarto{p in PACIENTE}: Q110[p] + Q112[p] + Q103[p] + Q114[p] + Q105[p] + reserva[p] == 1;
 
+/* garante que pacientes alocados nao sao removidos */
+s.t. pac_keep:  reserva['P34345454354'] + reserva['P93092302930'] + reserva['P54532513216']  == 0;
+
 /* move no maximo 0 pacientes ja alocados */
 s.t. lim_mov: Q110['P34345454354'] + Q112['P93092302930'] + Q103['P54532513216'] >= 3;
 

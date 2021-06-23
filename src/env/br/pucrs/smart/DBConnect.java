@@ -220,6 +220,7 @@ public class DBConnect {
 		}
 				
 		String pAlocLim = ""; //pacientes ja alocados
+		String pAlocMov = ""; //pacientes ja alocados
 		int curPAloc = 0; //numero de pacientes ja alocados
 		
         //quartos
@@ -246,6 +247,7 @@ public class DBConnect {
 				if(p == null) continue;
 				curPAloc++;
 				pAlocLim += "+ Q" + quartoNam + "['P" + p.cpf +"'] ";
+				pAlocMov += "+ reserva['P" + p.cpf + "'] ";
 			}
 			
             //caracteristicas do quarto
@@ -281,6 +283,9 @@ public class DBConnect {
         
         //garante que o paciente so esta em um quarto
         file.write("\n/* garante que o paciente so esta em um quarto */\ns.t. pacienteQuarto{p in PACIENTE}: " + nomeQuartos + "reserva[p] == 1;\n");
+		
+        //garante que o paciente so esta em um quarto
+        file.write("\n/* garante que pacientes alocados nao sao removidos */\ns.t. pac_keep: " + pAlocMov.substring(1) + " == 0;\n");
         
         //criterios de movimento de pacientes
         file.write("\n/* move no maximo " + String.valueOf(movLim) + " pacientes ja alocados */\ns.t. lim_mov:" + pAlocLim.substring(1) + ">= " + String.valueOf(curPAloc - movLim) + ";\n");
