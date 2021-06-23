@@ -1,14 +1,8 @@
-// Agent assistant in project bed-allocation-system
-
-/* Initial beliefs and rules */
-
-/* Initial goals */
-
 !start.
 
 /* Plans */
 
-+!start : true <- .print("Assistant agent enabled.").
++!start : true <- .print("Assistant agent enabled.").//; !getOptimisedAllocation.
 
 +!getOptimisedAllocation
 <- 
@@ -19,7 +13,11 @@
 <- 
 	.send(validator,question,getValidationResult);
 	.
-	
+
+/* 
+ * Validation Result
+ */
+
 +!setValidationResult(Result) // result(WasInformed, IsValid, Errors) Errors = [err(Nome, Leito, [mot(Type, Predicate, PredType)])];  
 <- 
 	+Result; 
@@ -66,6 +64,63 @@
 	.concat(Temp, Predicate, " ", PredType, ", ", T);
 	!analiseMotives(Rest, T, Resp);
 	.
+	
+/* 
+ * Optimisation Result
+ */
+	
++!analiseOptimisation(optimiserResult(IsAllAllocated,notAlloc(NotAllocList),sugestedAllocation(SugestionList)), Response)
+	: IsAllAllocated == "true" & url(URL) & .length(SugestionList,X) & X>0
+<-
+	.concat("Ok, gerei uma alocação otimizada mantendo o maior número possível de quartos livres e deixando os pacientes mais graves próximos da sala de enfermagem. Você pode vê-la nesse endereço: ", URL, Response);
+	.
+	
++!analiseOptimisation(optimiserResult(IsAllAllocated,notAlloc(NotAllocList),sugestedAllocation(SugestionList)), Response)
+	: IsAllAllocated == "false" & url(URL) & .length(SugestionList,X) & X>0
+<-
+	.concat("Ok, gerei uma alocação otimizada, porém não conseguirei alocar todos os pacientes ", Temp);
+	!getNotAlloc(NotAllocList, Result);
+	.concat(Temp, Result, "Você pode ver minha sugestão nesse endereço: ", URL, Response);
+	.
+	
++!analiseOptimisation(optimiserResult(IsAllAllocated,notAlloc(NotAllocList),sugestedAllocation(SugestionList)), Response)
+	: .length(SugestionList,X) & X==0
+<-
+	.concat("Desculpe-me, mas com os dados disponíveis atualmente, não foi possível gerar uma alocação otimizada.", Response);
+	.
+	
++!getNotAlloc(NotAllocList, Result)
+	: .length(NotAllocList,X) & X==1
+<-
+	.concat("pois não localizei leito adequado para o paciente ", Temp);
+	!getNotAllocName(NotAllocList, Resp);
+	.concat(Temp, Resp, Result);
+	.
++!getNotAlloc(NotAllocList, Result)
+	: .length(NotAllocList,X) & X>1
+<-
+	.concat("pois não localizei leitos adequados para os pacientes ", Temp);
+	!getNotAllocNames(NotAllocList, "", Resp);
+	.concat(Temp, Resp, Result);
+	.
++!getNotAllocName([Patient|[]], Resp)
+<-
+	.concat(Patient, ". ", Resp);
+	.
+	
++!getNotAllocNames([Patient|[]], Temp, Result)
+<-
+	.concat(Temp, "e ", Patient, ". ", Result);
+	.
++!getNotAllocNames([Patient|RestOfTheList], Temp, Result)
+<-
+	.concat(Temp, Patient, ", ", T);
+	!getNotAllocNames(RestOfTheList, T, Result);
+	.
+
+/* 
+ * Kqml Plans
+ */
 
 +!kqml_received(Sender,question,getValidationResult,MsgId)
 	<-	.print("Agent ", Sender, " requesting validation result.");
@@ -79,9 +134,11 @@
 	<-	.print("Agent ", Sender, " requesting an optmised allocation.");
 		!getOptimisedAllocation.
 			
-+!kqml_received(optimiser,assert,Response,MsgId)
-	<-	.print("Response received from agent optimiser");
-		.send(operator,assert,Response).
++!kqml_received(optimiser,assert,Result,MsgId)
+	<-	.print("Result received from agent optimiser"); // optimiserResult(IsAllAllocated,notAlloc([PacienteName]), sugestedAllocation([alloc(PacienteName, NumLeito)])) -> where IsAllAllocated is boolean
+		!analiseOptimisation(Result, Response);
+		.send(operator,assert,Response)
+		.
 
 
 { include("$jacamoJar/templates/common-cartago.asl") }

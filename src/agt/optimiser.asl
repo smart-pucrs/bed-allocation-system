@@ -8,12 +8,13 @@
 
 /* Plans */
 
-+!start : true <- .print("Optimiser agent enabled."); alocLeitos(R).
++!start : true <- .print("Optimiser agent enabled.").//; alocLeitos(R).
 
 +!getOptimisedAllocation(Response)
 <-
-	.print("Calling optimiser.");
-	alocLeitos(Response);
+	.print("Calling Optimiser.");
+	alocLeitos(Response); // optimiserResult(IsAllAlocated,notAlloc([PacienteName]), sugestedAllocation([alloc(PacienteName, NumLeito)])) -> where IsAllAlocated is boolean
+	+Response;
 	.
 
 +!kqml_received(Sender,question,getOptimisedAllocation,MsgId)

@@ -5,12 +5,8 @@
 
 mas bed_allocation_agents {
 	
-//    agent aloc_agent:aloc_agent.asl{
-//    	focus: integration, aloc
-//    }
-    
-    agent assistant:assistant.asl{
-//    	focus: integration
+  	agent assistant:assistant.asl{
+		beliefs: url("https://explainable-agent.firebaseapp.com/page/optimised")
     }    
 	agent optimiser:optimiser.asl{
     	focus: aloc
@@ -18,7 +14,6 @@ mas bed_allocation_agents {
   
 	agent validator:validator.asl{
     	focus: pddl
-    	beliefs: domainFile("src/resources/domain.pddl"), problemFile("src/resources/problem.pddl"), planFile("src/resources/plan.pddl"), outFile("src/resources/output.tex")
     }
 
 	agent operator:communication_specialist.asl{

@@ -1,7 +1,7 @@
 set PACIENTE;
 
-param genero{p in PACIENTE} integer;
 param tipoDeEncaminhamento{p in PACIENTE} integer;
+param genero{p in PACIENTE} integer;
 
 
 /***************************************************

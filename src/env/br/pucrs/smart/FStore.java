@@ -206,13 +206,13 @@ public class FStore extends DBConnect{
 				if((boolean)laudoIntern.get("internado")) {
 					laudo.setDataInternacao((Integer)(int)(long)laudoIntern.get("dataInternacao"));
 					String leitoS = (String)((Map)laudoIntern.get("leito")).get("numero");
-					System.out.println(p.nome);
-					System.out.println(leitoS);
+//					System.out.println(p.nome);
+//					System.out.println(leitoS);
 					leitoAloc.put(leitoS,p);
-					System.out.println(leitoAloc);
+//					System.out.println(leitoAloc);
 					p.leitoP = leitoS;
 				}
-				System.out.println("");
+//				System.out.println("");
 				//%fix%
 				if(laudoIntern.get("valorCuidado") != null) p.valorCuidado = Float.parseFloat(String.valueOf(laudoIntern.get("valorCuidado")));
 				ativo = true;
@@ -298,4 +298,16 @@ public class FStore extends DBConnect{
 		initPacientes();
 		initExcecoes();		
 	}
+	
+	public OptimiserResult getOptimisationResult() throws ExecutionException, InterruptedException, IOException {
+		init();
+		initExcecoes();
+		quartoOut(0);
+		pacienteOut();
+		runAloc(10); // 10 segundos max
+		procAloc();
+		OptimiserResult result = optInit();
+		return result;
+	}
+	
 }

@@ -2,19 +2,20 @@
 
 package br.pucrs.smart;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.concurrent.ExecutionException;
 
 import br.pucrs.smart.models.firestore.Allocation;
 import br.pucrs.smart.models.firestore.LaudosInternacao;
 import br.pucrs.smart.models.firestore.Leito;
 import br.pucrs.smart.models.firestore.OptimiserResult;
-import br.pucrs.smart.models.firestore.Paciente;
 import cartago.Artifact;
 import cartago.OPERATION;
 import cartago.OpFeedbackParam;
 import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Literal;
+import jason.asSyntax.Term;
 
 public class FStoreArtifact extends Artifact {
 	private FStore aloc;
@@ -28,28 +29,72 @@ public class FStoreArtifact extends Artifact {
 
 	@OPERATION
 	// aloca todos os leitos
-	void alocLeitos(OpFeedbackParam<String> response) {
-		if (aloc == null)
-			init();
-		System.out.println("operation called");
+	void alocLeitos(OpFeedbackParam<Literal> response) {
+		if (aloc == null) init();
 		try {
-			aloc.init();
-			aloc.initExcecoes();
-			aloc.quartoOut(0);
-			aloc.pacienteOut();
-			aloc.runAloc(10); // 10 segundos max
-			aloc.procAloc();
-			OptimiserResult result = aloc.optInit();
-			System.out.println("----------------------- result");
-			System.out.println(result.toString());
-			// OptimiserResult optimiserResult = getData(result);
-			// System.out.println(optimiserResult.toString());
-//			String r = FirebaseDb.addOptimiserResult(optimiserResult);
-//			System.out.println(r);
-			response.set(
-					"Ok, gerei uma alocação otimizada mantendo o maior número possível de quartos livres e deixando os pacientes mais graves próximos da sala de enfermagem. Você pode vê-la clicando aqui: https://explainable-agent.firebaseapp.com/page/optimised");
+			OptimiserResult result = aloc.getOptimisationResult();
+			Literal optimiserBelief = createOptimiserBelief(result);
+			System.out.println(optimiserBelief);
+			response.set(optimiserBelief);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	// return a Literal like optimiserResult(IsAllAllocated,notAlloc([PacienteName]), sugestedAllocation([alloc(PacienteName, NumLeito)])) where IsAllAllocated is boolean
+		Literal createOptimiserBelief(OptimiserResult op) {
+
+			Literal l = ASSyntax.createLiteral("optimiserResult");
+			l.addTerm(ASSyntax.createString(op.isAllAllocated()));
+			l.addTerm(createNotAllocBelief(op));
+			l.addTerm(createSugestedAllocationBelief(op));
+//			l.addTerm(ASSyntax.createString(false));
+			return l;
+		}
+
+	// return a Literal like notAlloc([PacienteName])
+	Literal createNotAllocBelief(OptimiserResult op) {
+
+		Literal l = ASSyntax.createLiteral("notAlloc");
+		Collection<Term> terms = new LinkedList<Term>();
+		for (String id : op.getNotAllocated()) {
+			for (LaudosInternacao p : op.getLaudosData()) {
+				if (p.getIdPaciente().equals(id)) {
+					terms.add(ASSyntax.createString(p.getNomePaciente()));
+				}
+			}
+		}
+		l.addTerm(ASSyntax.createList(terms));
+		return l;
+	}
+
+	// return a Literal like sugestedAllocation([alloc(PacienteName, NumLeito)])
+	Literal createSugestedAllocationBelief(OptimiserResult op) {
+
+		Literal l = ASSyntax.createLiteral("sugestedAllocation");
+		Collection<Term> terms = new LinkedList<Term>();
+		for (Allocation a : op.getSugestedAllocation()) {
+			for (LaudosInternacao p : op.getLaudosData()) {
+				if (p.getIdPaciente().equals(a.getIdPaciente())) {
+					Literal allocLiteral = ASSyntax.createLiteral("alloc");
+					allocLiteral.addTerm(ASSyntax.createString(p.getNomePaciente()));
+					allocLiteral.addTerm(ASSyntax.createString(p.getLeito().getNumero()));
+					terms.add(allocLiteral);
+				}
+			}
+		}
+		l.addTerm(ASSyntax.createList(terms));
+		return l;
+	}
+
+	@OPERATION
+	// aloca todos os leitos
+	void pddl() {
+		try {
+			aloc.pddl();
+//			aloc.tests();
+		} catch (Exception e) {
+			System.out.println(e);
 		}
 	}
 
@@ -85,28 +130,5 @@ public class FStoreArtifact extends Artifact {
 			}
 		}
 		return optimiserResult;
-	}
-
-	// return a list of notAloc([PacienteName])
-	Literal createParamBelief(List<String> idsPaciente) throws InterruptedException, ExecutionException {
-
-		Literal l = ASSyntax.createLiteral("notAloc");
-		for (String id : idsPaciente) {
-			LaudosInternacao p = FirebaseDb.getLaudosInternacaoByIdPaciente(id);
-
-			l.addTerm(ASSyntax.createString(p.getNomePaciente()));
-		}
-		return l;
-	}
-
-	@OPERATION
-	// aloca todos os leitos
-	void pddl() {
-		try {
-			aloc.pddl();
-//			aloc.tests();
-		} catch (Exception e) {
-			System.out.println(e);
-		}
 	}
 }
