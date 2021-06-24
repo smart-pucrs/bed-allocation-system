@@ -21,7 +21,7 @@ mas bed_allocation_agents {
     }
 
 	agent database:database_specialist.asl{
-    	focus: database
+    	focus: database, aloc
     }
     
 	workspace wp{

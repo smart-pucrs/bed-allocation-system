@@ -8,12 +8,12 @@
 
 /* Plans */
 
-+!start : true <- .print("Optimiser agent enabled.").//; alocLeitos(R).
++!start : true <- .print("Optimiser agent enabled.").//; allocLeitos(R).
 
 +!getOptimisedAllocation(Response)
 <-
 	.print("Calling Optimiser.");
-	alocLeitos(Response); // optimiserResult(IsAllAlocated,notAlloc([PacienteName]), sugestedAllocation([alloc(PacienteName, NumLeito)])) -> where IsAllAlocated is boolean
+	allocLeitos(Response); // optimiserResult(IsAllAlocated,notAlloc([PacienteName]), sugestedAllocation([alloc(PacienteName, NumLeito)])) -> where IsAllAlocated is boolean
 	+Response;
 	.
 

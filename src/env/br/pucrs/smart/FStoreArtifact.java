@@ -19,6 +19,7 @@ import jason.asSyntax.Term;
 
 public class FStoreArtifact extends Artifact {
 	private FStore aloc;
+	private OptimiserResult optimiserResult;
 
 	void init() {
 		try {
@@ -29,11 +30,17 @@ public class FStoreArtifact extends Artifact {
 
 	@OPERATION
 	// aloca todos os leitos
-	void alocLeitos(OpFeedbackParam<Literal> response) {
+	void getOptimiserResult(OpFeedbackParam<OptimiserResult> response) {
+		response.set(this.optimiserResult);
+	}
+	
+	@OPERATION
+	// aloca todos os leitos
+	void allocLeitos(OpFeedbackParam<Literal> response) {
 		if (aloc == null) init();
 		try {
-			OptimiserResult result = aloc.getOptimisationResult();
-			Literal optimiserBelief = createOptimiserBelief(result);
+			this.optimiserResult = aloc.getOptimisationResult();
+			Literal optimiserBelief = createOptimiserBelief(this.optimiserResult);
 			System.out.println(optimiserBelief);
 			response.set(optimiserBelief);
 		} catch (Exception e) {
@@ -48,7 +55,6 @@ public class FStoreArtifact extends Artifact {
 			l.addTerm(ASSyntax.createString(op.isAllAllocated()));
 			l.addTerm(createNotAllocBelief(op));
 			l.addTerm(createSugestedAllocationBelief(op));
-//			l.addTerm(ASSyntax.createString(false));
 			return l;
 		}
 

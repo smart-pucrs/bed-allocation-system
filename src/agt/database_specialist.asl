@@ -12,10 +12,26 @@
 	: true 
 <- 
 	.print("Database specialist agent enabled.");
-//    getData(Data);
+//  getData(Data);
 //	.print("Data: ");
-//    .print(Data);
+//  .print(Data);
     .
+    
+    
++!saveOptimiserResult
+<-
+	getOptimiserResult(Result);
+	setOptimiserResult(Result, Response);
+	.print(Response);
+	.
+	
+	
++!kqml_received(assistant,assert,saveOptimiserResult,MsgId)
+	<-	.print("Agent assistant wants to save the optimiser result"); // optimiserResult(IsAllAllocated,notAlloc([PacienteName]), sugestedAllocation([alloc(PacienteName, NumLeito)])) -> where IsAllAllocated is boolean
+		!saveOptimiserResult;
+		.
+
+
 
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }

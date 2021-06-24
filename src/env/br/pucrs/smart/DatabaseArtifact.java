@@ -18,6 +18,7 @@ import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
 import com.google.gson.Gson;
 
+import br.pucrs.smart.models.firestore.OptimiserResult;
 import br.pucrs.smart.models.firestore.Paciente;
 import cartago.*;
 
@@ -71,6 +72,17 @@ public class DatabaseArtifact extends Artifact {
 		} catch (ExecutionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	
+	@OPERATION
+	void setOptimiserResult(OptimiserResult result, OpFeedbackParam<String> response) {
+		try {
+			response.set(FirebaseDb.addOptimiserResult(result));
+		} catch (InterruptedException | ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			response.set("There was an error adding the document to the database");
 		}
 	}
 }

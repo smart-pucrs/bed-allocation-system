@@ -24,7 +24,6 @@
 	.print("Result: ");
 	.print(Result);
 	!analiseResult(Result, Response);
-	.print(Response);
 	.print("Sending response to agent operador");
 	.send(operator,assert,Response)
 	.
@@ -40,7 +39,6 @@
 	Temp = "O seu plano de alocação de leitos possui falhas. Houve um erro ao alocar os seguintes pacientes: ";
 	!analiseErrors(Errors, Temp, Response);
 	.concat(Response, "Devo confirmar a alocação mesmo assim ou prefere que eu sugira uma alocação otimizada?", Resp);
-	.print(Resp);
 	.
 +!analiseErrors([err(Nome, Leito, Motives)|[]], Temp, Resp)
 <-
@@ -137,7 +135,8 @@
 +!kqml_received(optimiser,assert,Result,MsgId)
 	<-	.print("Result received from agent optimiser"); // optimiserResult(IsAllAllocated,notAlloc([PacienteName]), sugestedAllocation([alloc(PacienteName, NumLeito)])) -> where IsAllAllocated is boolean
 		!analiseOptimisation(Result, Response);
-		.send(operator,assert,Response)
+		.send(database,assert,saveOptimiserResult);
+		.send(operator,assert,Response);
 		.
 
 
