@@ -23,17 +23,22 @@ import java.io.InputStreamReader;
 //val
 import br.pucrs.smart.val.*;
 
+//model
+import br.pucrs.smart.models.firestore.*;
+
 public class DBConnect {
 	//informação pro glpsol
 	Map<String, Map> regras; //regras de cada tipo de quarto, e.g. regras de quartos da medicina interna
 	Map<String, Quarto> quartos; //nome do quarto -> objeto do quarto(leitos e regras) 
+	Map<String, Leito> leitos; //nome do leito -> objeto do leito
 	Map<String, Paciente> pacientesMap; //cpf -> objeto1 do paciente 
 	List<Paciente> pacientes; // Lista de pacientes 
 	List<Caract> caracts; //lista de todas caracteristicas possiveis (e.g genero=[masculino,feminino])
 	Map<String, Caract> caractMap; //nome da caracteristica -> objeto da caracteristica; 
 	Map<String, Paciente> leitoAloc; //leito -> paciente; 
 	
-	private final String GLPSol = "A:\\Programs\\glpk-4.65\\w64\\glpsol.exe"; //localizacao do glpsol
+	//	private final String GLPSol = "a:\\Programs\\glpk-4.65\\w64\\glpsol.exe"; //localizacao do glpsol
+	private final String GLPSol = "/opt/bin/glpsol";
 	private Process glpsol; //processo do glpsol
 	BufferedReader out; //output do glpsol
 	private int maxMinT = 1; //tipo de criterio de maximizacao
@@ -215,6 +220,7 @@ public class DBConnect {
 		}
 				
 		String pAlocLim = ""; //pacientes ja alocados
+		String pAlocMov = ""; //pacientes ja alocados
 		int curPAloc = 0; //numero de pacientes ja alocados
 		
         //quartos
@@ -241,6 +247,7 @@ public class DBConnect {
 				if(p == null) continue;
 				curPAloc++;
 				pAlocLim += "+ Q" + quartoNam + "['P" + p.cpf +"'] ";
+				pAlocMov += "+ reserva['P" + p.cpf + "'] ";
 			}
 			
             //caracteristicas do quarto
@@ -276,6 +283,9 @@ public class DBConnect {
         
         //garante que o paciente so esta em um quarto
         file.write("\n/* garante que o paciente so esta em um quarto */\ns.t. pacienteQuarto{p in PACIENTE}: " + nomeQuartos + "reserva[p] == 1;\n");
+		
+        //garante que o paciente so esta em um quarto
+        file.write("\n/* garante que pacientes alocados nao sao removidos */\ns.t. pac_keep: " + pAlocMov.substring(1) + " == 0;\n");
         
         //criterios de movimento de pacientes
         file.write("\n/* move no maximo " + String.valueOf(movLim) + " pacientes ja alocados */\ns.t. lim_mov:" + pAlocLim.substring(1) + ">= " + String.valueOf(curPAloc - movLim) + ";\n");
@@ -396,7 +406,7 @@ public class DBConnect {
 			}
 			line = out.readLine();
 		}
-		System.out.println(optimal? "Optimal result" : "Non optimal result");
+//		System.out.println(optimal? "Optimal result" : "Non optimal result");
 		//aloca o paciente para leito dentro do quarto
 		line = out.readLine();
 		while(!line.startsWith("reserva")){
@@ -597,6 +607,49 @@ public class DBConnect {
 		}
 		file.close();
 	}	
+	
+	
+	/**************************************************
+	*	Create optimizer
+	**************************************************/
+	public OptimiserResult optInit(){		
+		List<Allocation> pAloc = new ArrayList<Allocation>();
+		List<LaudosInternacao> laudosData = new ArrayList<LaudosInternacao>();
+		if(leitoAloc != null){
+			for(Map.Entry<String, Paciente> mE : leitoAloc.entrySet()){
+				//sem paciente
+				if(mE.getValue() == null) continue; 
+				//paciente nao movido 
+				if(mE.getKey().equals(((Paciente)mE.getValue()).leitoP)) continue;
+				Allocation aux = new Allocation();
+				aux.setIdPaciente(((Paciente)mE.getValue()).id);
+				aux.setLeito((String)mE.getKey());
+				//%PLACEHOLDER%
+				aux.setPacienteData(null);
+				aux.setLeitoData(null);
+				aux.setLaudo(null);
+				pAloc.add(aux);
+				Leito lt = leitos.get((String)mE.getKey());
+				((Paciente)mE.getValue()).laudo.setLeito(lt);
+				laudosData.add(((Paciente)mE.getValue()).laudo);
+			}
+		}
+		
+		List<String> pNAloc = new ArrayList<String>();
+		if(nAloc != null){
+			for(Paciente p : nAloc){
+				pNAloc.add(p.id);
+			}
+		}
+		
+		OptimiserResult out = new OptimiserResult();
+		out.setSugestedAllocation(pAloc);
+		out.setLaudosData(laudosData);
+		out.setNotAllocated(pNAloc);
+		out.setAllAllocated(pNAloc.size() == 0);
+		
+		return out;
+	}
 }
 
 
@@ -606,12 +659,14 @@ public class DBConnect {
 ***************************************************/
 class Quarto {
 	public List<String> leitos;
+	public List<Leito> leitosL;
 	public List<Map> tipo;
 	public String tipoID;
 	public float valorCuidado;
 	
 	public Quarto(){
 		leitos = new ArrayList();
+		leitosL = new ArrayList();
 	}
 }
 
@@ -634,8 +689,11 @@ class Caract {
 *	Paciente
 ***************************************************/
 class Paciente {
+	public String id;
 	public String nome;
 	public String cpf;
 	public float valorCuidado;
+	public String leitoP;
 	int[] caracts;
+	LaudosInternacao laudo;
 }

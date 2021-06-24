@@ -54,7 +54,7 @@ public class IntegrationArtifact extends Artifact implements IAgent {
 		if (this.awaitingResponse) {
 			this.jasonResponse = response;
 		} else {
-			System.out.println("Resposta chegou atrasada");
+			System.out.println("Reply arrived late");
 		}
 	}
 	
@@ -78,10 +78,10 @@ public class IntegrationArtifact extends Artifact implements IAgent {
 			this.intentEvent = "";
 			if (intentName != null) {
 				execInternalOp("createRequestBelief", responseId, intentName, parameters, outputContexts, session);
-				System.out.println("Definindo propriedade observavel");
+				System.out.println("Defining observable property");
 			} else {
-				System.out.println("Não foi possível definir a propriedade observavel");
-				response.setFulfillmentText("Intensão não reconhecida");
+				System.out.println("Could not set observable property");
+				response.setFulfillmentText("Unrecognized intent");
 			}
 		}
 		int i = 0;
@@ -94,7 +94,7 @@ public class IntegrationArtifact extends Artifact implements IAgent {
 			}
 		}
 		if (this.jasonResponse != null) {
-			System.out.println("jasonResponse " + this.jasonResponse);
+			System.out.println("Agent jason's response: " + this.jasonResponse);
 			response.setFulfillmentText(this.jasonResponse);
 			if (this.jasonOutputContext != null) {
 				response.addOutputContexts(this.jasonOutputContext);
@@ -109,7 +109,7 @@ public class IntegrationArtifact extends Artifact implements IAgent {
 			this.generatedEvent = false;
 			this.intentEvent = "";
 		} else {
-			System.out.println("Sem jasonResponse");
+			System.out.println("No response from agent jason");
 			//response.setFulfillmentText("Sem resposta do agente");
 			FollowupEventInput newEvent = new FollowupEventInput();
 			newEvent.setName(removeSpaces(intentName));
@@ -126,7 +126,7 @@ public class IntegrationArtifact extends Artifact implements IAgent {
 	}
 	
 	String removeSpaces(String phrase) {
-		System.out.println(phrase.replaceAll(" ", ""));
+//		System.out.println(phrase.replaceAll(" ", ""));
 		return phrase.replaceAll(" ", "");
 	}
 	
@@ -158,7 +158,7 @@ public class IntegrationArtifact extends Artifact implements IAgent {
 		    	terms.add(l);
 		    } else {
 		    	
-		    	System.out.println("Valor do parâmetro " + key + " informados em formato desconhecido" + value.getClass());
+		    	System.out.println("Parameter " + key + " value reported in unknown format" + value.getClass());
 		    }
 		}
 		return ASSyntax.createList(terms);

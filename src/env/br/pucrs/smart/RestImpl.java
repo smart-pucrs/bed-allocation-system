@@ -42,7 +42,7 @@ public class RestImpl extends AbstractBinder {
     public Response createNewAgent(String request) {
         try {
         	RequestDialogflow requestDialogflow = gson.fromJson(request, RequestDialogflow.class);
-        	System.out.println("Agente comunicado: " +  gson.toJson(requestDialogflow)); 
+        	System.out.println("Agent communicated: " +  gson.toJson(requestDialogflow)); 
         	if (mas != null) {
         		ResponseDialogflow responseDialogflow = mas.processarIntencao(requestDialogflow.getResponseId(),
         																	  requestDialogflow.getQueryResult().getIntent().getDisplayName(),
@@ -60,30 +60,4 @@ public class RestImpl extends AbstractBinder {
         }
         return Response.status(500).build();
     }
-	
-//	@Path("/val")
-//    @POST
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response validatePlan(String request) {
-//        try {
-//        	RequestDialogflow requestDialogflow = gson.fromJson(request, RequestDialogflow.class);
-//        	System.out.println("Agente comunicado: " +  gson.toJson(requestDialogflow)); 
-//        	if (mas != null) {
-//        		ResponseDialogflow responseDialogflow = mas.processarIntencao(requestDialogflow.getResponseId(),
-//        																	  requestDialogflow.getQueryResult().getIntent().getDisplayName(),
-//        																	  requestDialogflow.getQueryResult().getParameters(),
-//        																	  requestDialogflow.getQueryResult().getOutputContexts(),
-//        																	  requestDialogflow.getSession());
-//        		return Response.ok(gson.toJson(responseDialogflow)).build();
-//        	} else {
-//        		ResponseDialogflow responseDialogflow = new ResponseDialogflow();   
-//            	responseDialogflow.setFulfillmentText("Desculpe, Não foi possível encontrar o agente Jason");
-//            	return Response.ok(gson.toJson(responseDialogflow)).build();
-//        	}
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return Response.status(500).build();
-//    }
-
 }
