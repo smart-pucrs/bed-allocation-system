@@ -12,7 +12,7 @@ You will find all the necessary documentation in our [Wiki](https://github.com/s
 [Olimar Teixeira Borges](https://github.com/olimarborges), 
 [Tabajara Krausburg](https://github.com/TabajaraKrausburg), 
 [Marivaldo Vivan](https://github.com/Vivannaboa)  and
-[Rafael H. Bordini](https://github.com/rbordini) Available in [helloworld_from_jason](https://github.com/DeboraEngelmann/helloworld_from_jason).
+[Rafael H. Bordini](https://github.com/rbordini) Available in [Dial4JaCa](https://github.com/smart-pucrs/Dial4JaCa).
 
 ## Arquivos 
 - aloc_agent.asl
