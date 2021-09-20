@@ -5,7 +5,7 @@ By [Débora C. Engelmann](https://github.com/DeboraEngelmann),
 [Alison R. Panisson](https://github.com/AlisonPanisson) and
 [Rafael H. Bordini](https://github.com/rbordini)
 
-You will find all the necessary documentation in our [Wiki](https://github.com/smart-pucrs/explainable_agents/wiki) (Quando ela existir...).
+You will find all the necessary documentation in our [Wiki](https://github.com/smart-pucrs/bed-allocation-system/wiki).
 
 > Part of the code used in this project is authored by [Débora Engelmann](https://github.com/DeboraEngelmann), 
 [Juliana Damasio Oliveira](https://github.com/julianadamasio), 
@@ -14,19 +14,22 @@ You will find all the necessary documentation in our [Wiki](https://github.com/s
 [Marivaldo Vivan](https://github.com/Vivannaboa)  and
 [Rafael H. Bordini](https://github.com/rbordini) Available in [Dial4JaCa](https://github.com/smart-pucrs/Dial4JaCa).
 
-## Arquivos 
+## Files 
 - aloc_agent.asl
 
-  Agente de alocação(temp).
+  Allocation agent.
+  
 - DBConnect.java 
 
-  Objeto que interage com o GLPSOL(requer que a string 'GLPSol' aponte para o arquivo correto)
+  Object that interacts with GLPSOL(requires the string 'GLPSol' to point to the correct file)
+  
 - FStore.java
 
-  Objeto que implementa o DBConnect, configurado para ler o input do firebase. 
+  Object that implements the DBConnect, configured to read firebase input.
+  
 - FStoreArtifact.java 
 
-  Artefato que gerencia as operações do agente com o objeto FStore 
+  Artifact that manages agent operations with the FStore object.
 
 ## To run this project you need
 
