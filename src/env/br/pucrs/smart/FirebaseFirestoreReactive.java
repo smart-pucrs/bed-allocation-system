@@ -53,15 +53,16 @@ public class FirebaseFirestoreReactive {
 
 				for (DocumentChange dc : snapshots.getDocumentChanges()) {
 					switch (dc.getType()) {
-					case ADDED:
+					case MODIFIED:
 						String json = dc.getDocument().getData().toString();
+						System.out.println(json);
 						JsonObject body = gson.fromJson(json, JsonObject.class);
 						ArrayList<LaudosInternacao> laudos = new ArrayList<LaudosInternacao>();
 						Validacao validation = new Validacao();
 						if (body != null) {
 							TempAloc temp = gson.fromJson(body, TempAloc.class);
 							if (!temp.isValidated()) {
-								System.out.println("New: " + body);
+								System.out.println("Modified: " + body);
 								for (Allocation alloc : temp.getAllocation()) {
 									try {
 										LaudosInternacao laudo = new LaudosInternacao();
@@ -82,14 +83,14 @@ public class FirebaseFirestoreReactive {
 									}
 								}
 
-								mas.receiveValidation(validation);
+								mas.receiveValidation(validation, temp);
 							}
 						}
 						break;
-					case MODIFIED:
+					case ADDED:
 						String json1 = dc.getDocument().getData().toString();
 						JsonObject body1 = gson.fromJson(json1, JsonObject.class);
-						System.out.println("------------------Modified: " + body1);
+						System.out.println("------------------New: " + body1);
 						break;
 					case REMOVED:
 						System.out.println("-------------------Removed: " + dc.getDocument().getData());

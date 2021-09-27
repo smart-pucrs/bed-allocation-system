@@ -10,9 +10,11 @@ import java.util.concurrent.ExecutionException;
 
 import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
@@ -83,6 +85,22 @@ public class DatabaseArtifact extends Artifact {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			response.set("There was an error adding the document to the database");
+		}
+	}
+	
+	
+	@OPERATION
+	void updateValidationResult(String id, String response) {
+		try {
+			DocumentReference docRef = db.collection("validacoes").document(id);
+			// (async) Update one field
+			ApiFuture<WriteResult> future = docRef.update("retorno", response);
+			WriteResult result = future.get();
+			System.out.println("Write result: " + result);
+		} catch (InterruptedException | ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("There was an error adding the document to the database");
 		}
 	}
 }

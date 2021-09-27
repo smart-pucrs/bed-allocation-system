@@ -24,13 +24,19 @@
 	setOptimiserResult(Result, Response);
 	.print(Response);
 	.
-	
++!updateValidationResult(update(Id, Response))
+<-
+	updateValidationResult(Id, Response);
+	.
 	
 +!kqml_received(assistant,assert,saveOptimiserResult,MsgId)
 	<-	.print("Agent assistant wants to save the optimiser result"); // optimiserResult(IsAllAllocated,notAlloc([PacienteName]), sugestedAllocation([alloc(PacienteName, NumLeito)])) -> where IsAllAllocated is boolean
 		!saveOptimiserResult;
 		.
-
++!kqml_received(assistant,assert,update(Id, Response),MsgId)
+	<-	.print("Agent assistant wants to update the validation result"); // optimiserResult(IsAllAllocated,notAlloc([PacienteName]), sugestedAllocation([alloc(PacienteName, NumLeito)])) -> where IsAllAllocated is boolean
+		!updateValidationResult(update(Id, Response));
+		.
 
 
 { include("$jacamoJar/templates/common-cartago.asl") }
