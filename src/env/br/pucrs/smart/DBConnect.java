@@ -619,6 +619,9 @@ public class DBConnect {
 			for(Map.Entry<String, Paciente> mE : leitoAloc.entrySet()){
 				//sem paciente
 				if(mE.getValue() == null) continue; 
+
+				System.out.println("mE.getValue().laudo");
+				System.out.println(((Paciente)mE.getValue()).laudo.toString());
 				//paciente nao movido 
 				if(mE.getKey().equals(((Paciente)mE.getValue()).leitoP)) continue;
 				Allocation aux = new Allocation();

@@ -32,5 +32,6 @@ mas bed_allocation_agents {
 	}
 	
 	platform: br.pucrs.smart.RestArtifact("--main 2181 --restPort 8080")
+//	platform: jacamo.web.JCMWeb("--main 2181 --restPort 8080")
 
 }

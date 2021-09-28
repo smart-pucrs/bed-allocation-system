@@ -22,6 +22,12 @@
 <-
 	reply("Olá, eu sou seu agente Jason, em que posso lhe ajudar?");
 	.
+	
++!responder(RequestedBy, ResponseId, IntentName, Params, Contexts)
+	: (IntentName == "Default Welcome Intent")
+<-
+	reply("Olá, eu sou seu agente Jason, em que posso lhe ajudar?");
+	.
 
 +!responder(RequestedBy, ResponseId, IntentName, Params, Contexts)
 	: (IntentName == "Get Validation Result")
@@ -46,6 +52,22 @@
 	
 	.print("Chatbot of ", RequestedBy, " is requesting an optimised allocation.");
 	.send(assistant,question,getOptimisedAllocation);
+	.
+	
++!responder(RequestedBy, ResponseId, IntentName, Params, Contexts)
+	: (IntentName == "Get Validation Result - confirm")
+<-
+	
+	.print("Chatbot of ", RequestedBy, " is requesting the confirmation of the allocation.");
+	.send(assistant,question,allocPatients);
+	.
+	
++!responder(RequestedBy, ResponseId, IntentName, Params, Contexts)
+	: (IntentName == "Get Validation Result - no")
+<-
+	
+	.print("Chatbot of ", RequestedBy, " is requesting the cancellation of the allocation.");
+	.send(assistant,question,dontAllocPatients);
 	.
 	
 +!responder(RequestedBy, ResponseId, IntentName, Params, Contexts)

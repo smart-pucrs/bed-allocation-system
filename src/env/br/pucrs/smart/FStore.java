@@ -47,7 +47,9 @@ public class FStore extends DBConnect{
 	
 	//%PLACEHOLDER%
 	public FStore() throws IOException{
-		String credentials = "eexplainable-agent-firebase-adminsdk-u4w9g-4d5281c4dc.json";
+		System.out.println("Construtor Fstore");
+//		String credentials = "eexplainable-agent-firebase-adminsdk-u4w9g-4d5281c4dc.json";
+		String credentials = "src/resources/explainable-agent-d4391ab8fb68.json";
 		db = FirestoreOptions.getDefaultInstance().toBuilder()
 			.setCredentials(GoogleCredentials.fromStream(new FileInputStream(credentials)))
 			.build().getService();
@@ -189,6 +191,7 @@ public class FStore extends DBConnect{
 				laudo.setGenero((String)laudoIntern.get("genero"));
 				laudo.setId((String)laudoIntern.get("id"));
 				laudo.setIdPaciente((String)laudoIntern.get("idPaciente"));
+				laudo.setEspecialidade((String) laudoIntern.get("especialidade"));
 				laudo.setNomePaciente(p.nome);
 				laudo.setInternado((boolean)laudoIntern.get("internado"));
 				laudo.setLeito(leito);

@@ -18,22 +18,33 @@
  * Validation Result
  */
 
-+!setValidationResult(Result) // result(WasInformed, IsValid, Errors) Errors = [err(Nome, Leito, [mot(Type, Predicate, PredType)])];  
++!setValidationResult(Result) // result(Id, WasInformed, IsValid, Errors) Errors = [err(Nome, Leito, [mot(Type, Predicate, PredType)])];  
 <- 
 	+Result; 
 	.print("Result: ");
 	.print(Result);
 	!analiseResult(Result, Response);
 	.print("Sending response to agent operador");
-	.send(operator,assert,Response)
+	.send(operator,assert,Response);
+	!sendToDatabase(Result, Response);
 	.
+
++!sendToDatabase(result(Id, WasInformed, IsValid, Errors), Response)
+<-
 	
-+!analiseResult(result(WasInformed, IsValid, Errors), Resp)
+	.send(database,assert, update(Id, Response)).
+	
++!analiseResult(result(Response), Resp)
+	: (Response == "Validation not received")
+<-
+	Resp = "Desculpe, não recebi o seu plano de alocação para validar. Por favor, envie novamente.";
+	.
++!analiseResult(result(Id, WasInformed, IsValid, Errors), Resp)
 	: (IsValid == true)
 <-
 	Resp = "O seu plano de alocação de leitos não possui nenhuma falha. Posso confirmar a alocação?";
 	.
-+!analiseResult(result(WasInformed, IsValid, Errors), Resp)
++!analiseResult(result(Id, WasInformed, IsValid, Errors), Resp)
 	: (IsValid == false)
 <-
 	Temp = "O seu plano de alocação de leitos possui falhas. Houve um erro ao alocar os seguintes pacientes: ";
@@ -115,6 +126,19 @@
 	.concat(Temp, Patient, ", ", T);
 	!getNotAllocNames(RestOfTheList, T, Result);
 	.
+	
+/*
+ * Allocation of Patients
+ */
+
++!allocPatients
+<-
+	.print("Allocationg");
+	.
++!allocPatients
+<-
+	.print("Cancellating");
+	.
 
 /* 
  * Kqml Plans
@@ -131,7 +155,15 @@
 +!kqml_received(Sender,question,getOptimisedAllocation,MsgId)
 	<-	.print("Agent ", Sender, " requesting an optmised allocation.");
 		!getOptimisedAllocation.
-			
+
++!kqml_received(Sender,question,allocPatients,MsgId)
+	<-	.print("Agent ", Sender, " requesting confirmation of allocation.");
+		!allocPatients.
+
++!kqml_received(Sender,question,dontAllocPatients,MsgId)
+	<-	.print("Agent ", Sender, " requesting cancellation of allocation.");
+		!dontAllocPatients.
+
 +!kqml_received(optimiser,assert,Result,MsgId)
 	<-	.print("Result received from agent optimiser"); // optimiserResult(IsAllAllocated,notAlloc([PacienteName]), sugestedAllocation([alloc(PacienteName, NumLeito)])) -> where IsAllAllocated is boolean
 		!analiseOptimisation(Result, Response);

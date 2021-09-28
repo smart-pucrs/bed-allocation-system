@@ -7,6 +7,8 @@ public class TempAloc {
 	
 	private boolean validated;
 	private List<Allocation> allocation;
+	private long saveAt;
+	private String id;
 	
 	public boolean isValidated() {
 		return validated;
@@ -28,11 +30,27 @@ public class TempAloc {
 			this.allocation.add(allocation);
 		}
 	}
-	
+	public long getSaveAt() {
+		return saveAt;
+	}
+	public void setSaveAt(Integer saveAt) {
+		this.saveAt = saveAt;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	@Override
 	public String toString() {
 	    StringBuilder sb = new StringBuilder();
 	    sb.append("{ ");
+	    if (id != null) {
+        	sb.append(" id : ");
+        	sb.append(id);
+        	sb.append(", ");
+        }
 	    sb.append(" validated : ");
         sb.append(validated);
         sb.append(", ");
@@ -53,7 +71,12 @@ public class TempAloc {
 	        }
 	        sb.append("] ");
 	    }
+        	sb.append(", ");
+        	sb.append(" saveAt : ");
+        	sb.append(saveAt);
 	    sb.append("} ");
 		return sb.toString();
 	}
+	
+	
 }

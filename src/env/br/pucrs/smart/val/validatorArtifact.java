@@ -6,9 +6,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 import com.google.gson.Gson;
 
+import br.pucrs.smart.FirebaseDb;
 import br.pucrs.smart.FirebaseFirestoreReactive;
 import br.pucrs.smart.PddlBuilder;
 import br.pucrs.smart.interfaces.IValidator;
@@ -17,6 +20,7 @@ import br.pucrs.smart.models.firestore.ErrorVal;
 import br.pucrs.smart.models.firestore.LaudosInternacao;
 import br.pucrs.smart.models.firestore.PddlStrings;
 import br.pucrs.smart.models.firestore.ResultVal;
+import br.pucrs.smart.models.firestore.TempAloc;
 import br.pucrs.smart.models.firestore.Validacao;
 import cartago.Artifact;
 import cartago.INTERNAL_OPERATION;
@@ -153,14 +157,14 @@ public class validatorArtifact extends Artifact implements IValidator{
 		
 	//add to belief base result(WasInformed, IsValid, Errors) Errors = [err(Nome, Leito, [mot(Type, Predicate, PredType)])];  
 	@INTERNAL_OPERATION
-	void createResultBelief(boolean isValid, List<ResultVal> finalResult) {
+	void createResultBelief(boolean isValid, UUID guid, List<ResultVal> finalResult) {
 
 //		System.out.println("### ---------------------------------- finalResult");
 		for (ResultVal r : finalResult) {
 			
 //			System.out.println(r.toString());
 		}
-		defineObsProperty("result", false, isValid, createMotiveBelief(finalResult));
+		defineObsProperty("result", guid.toString(), false, isValid, createMotiveBelief(finalResult));
 	}
 	
 	ListTerm createMotiveBelief(List<ResultVal> finalResult) {
@@ -301,7 +305,7 @@ public class validatorArtifact extends Artifact implements IValidator{
 	
 	
 	@Override
-	public void receiveValidation(Validacao val) {
+	public void receiveValidation(Validacao val, TempAloc tempAloc) {
 		this.laudos = val.getPacientes();
 		// TODO Auto-generated method stub
 //		System.out.println(val.toString());
@@ -398,7 +402,15 @@ public class validatorArtifact extends Artifact implements IValidator{
 			resultVal.setNumeroLeito(getLeitoNumber(resultVal.getIdLeito()));
 			finalResult.add(resultVal);
 		}
-		execInternalOp("createResultBelief", pddl.goalAchieved(), finalResult);
+		UUID guid = java.util.UUID.randomUUID();
+		execInternalOp("createResultBelief", pddl.goalAchieved(), guid, finalResult);
+		try {
+			FirebaseDb.addValidationResult(finalResult, pddl.goalAchieved(), guid.toString());
+			FirebaseDb.setTempAlocValidated(tempAloc.getId());
+		} catch (InterruptedException | ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		pddl.valOut("src/resources/output.tex");
 	}
 	

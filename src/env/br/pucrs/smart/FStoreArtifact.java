@@ -40,6 +40,8 @@ public class FStoreArtifact extends Artifact {
 		if (aloc == null) init();
 		try {
 			this.optimiserResult = aloc.getOptimisationResult();
+			System.out.println("this.optimiserResult");
+			System.out.println(this.optimiserResult);
 			Literal optimiserBelief = createOptimiserBelief(this.optimiserResult);
 			System.out.println(optimiserBelief);
 			response.set(optimiserBelief);
