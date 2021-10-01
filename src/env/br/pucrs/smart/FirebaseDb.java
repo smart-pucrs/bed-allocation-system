@@ -133,10 +133,11 @@ public class FirebaseDb {
 			laudos.add(laudo);
 		}
 		val.setPacientes(laudos);
-		val.setConcluido(true);
+		val.setConcluido(false);
 		val.setSaveAt((new Date()).getTime());
 		val.setValido(valido);
 		val.setId(guid);
+		val.setAlocar(false);
 		
 		DocumentReference docRef = db.collection("validacoes").document(val.getId());
 		// (async) Update one field

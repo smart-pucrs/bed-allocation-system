@@ -283,7 +283,8 @@ public class DBConnect {
         
         //garante que o paciente so esta em um quarto
         file.write("\n/* garante que o paciente so esta em um quarto */\ns.t. pacienteQuarto{p in PACIENTE}: " + nomeQuartos + "reserva[p] == 1;\n");
-		
+		System.out.println("pAlocMov");
+        System.out.println(pAlocMov);
         //garante que o paciente so esta em um quarto
         file.write("\n/* garante que pacientes alocados nao sao removidos */\ns.t. pac_keep: " + pAlocMov.substring(1) + " == 0;\n");
         
@@ -650,7 +651,8 @@ public class DBConnect {
 		out.setLaudosData(laudosData);
 		out.setNotAllocated(pNAloc);
 		out.setAllAllocated(pNAloc.size() == 0);
-		
+		out.setAlocar(false);
+		out.setConcluido(false);	
 		return out;
 	}
 }

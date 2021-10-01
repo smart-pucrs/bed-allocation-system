@@ -103,4 +103,35 @@ public class DatabaseArtifact extends Artifact {
 			System.out.println("There was an error adding the document to the database");
 		}
 	}
+	
+	
+	@OPERATION
+	void allocByValidation(String id) {
+		try {
+			DocumentReference docRef = db.collection("validacoes").document(id);
+			// (async) Update one field
+			ApiFuture<WriteResult> future = docRef.update("alocar", true);
+			WriteResult result = future.get();
+			System.out.println("Write result: " + result);
+		} catch (InterruptedException | ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("There was an error adding the document to the database");
+		}
+	}
+	
+	@OPERATION
+	void cancelAllocation(String id) {
+		try {
+			DocumentReference docRef = db.collection("validacoes").document(id);
+			// (async) Update one field
+			ApiFuture<WriteResult> future = docRef.update("concluido", true);
+			WriteResult result = future.get();
+			System.out.println("Write result: " + result);
+		} catch (InterruptedException | ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("There was an error adding the document to the database");
+		}
+	}
 }

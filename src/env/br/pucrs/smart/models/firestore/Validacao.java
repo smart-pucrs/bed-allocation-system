@@ -1,6 +1,5 @@
 package br.pucrs.smart.models.firestore;
 
-import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -14,6 +13,7 @@ public class Validacao {
 		private boolean valido;
 		private boolean concluido;
 		private String id;
+		private boolean alocar;
 		
 		public List<LaudosInternacao> getPacientes() {
 			return pacientes;
@@ -71,6 +71,13 @@ public class Validacao {
 		public void setId(String id) {
 			this.id = id;
 		}
+		public boolean isAlocar() {
+			return alocar;
+		}
+		public void setAlocar(boolean alocar) {
+			this.alocar = alocar;
+		}
+
 		
 		@Override
 		public String toString() {
@@ -110,11 +117,13 @@ public class Validacao {
 	       	sb.append(" valido : ");
 	       	sb.append(valido);
 	        sb.append(", ");
+	       	sb.append(" alocar : ");
+	       	sb.append(alocar);
+	        sb.append(", ");
 	        sb.append(" concluido : ");
 	       	sb.append(concluido);
 	        sb.append("} ");
 			return sb.toString();
 		}
-
 
 }

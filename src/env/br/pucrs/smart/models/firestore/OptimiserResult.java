@@ -12,6 +12,8 @@ public class OptimiserResult {
 	private List<LaudosInternacao> laudosData;
 	private boolean alreadySuggested;
 	private String id;
+	private boolean alocar;
+	private boolean concluido;
 
 	public boolean isAllAllocated() {
 		return allAllocated;
@@ -105,6 +107,23 @@ public class OptimiserResult {
 		this.id = id;
 	}
 
+	public boolean isAlocar() {
+		return alocar;
+	}
+
+	public void setAlocar(boolean alocar) {
+		this.alocar = alocar;
+	}
+
+	public boolean isConcluido() {
+		return concluido;
+	}
+
+	public void setConcluido(boolean concluido) {
+		this.concluido = concluido;
+	}
+
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -154,6 +173,12 @@ public class OptimiserResult {
 		sb.append(", ");
 		sb.append(" alreadySuggested : ");
 		sb.append(alreadySuggested);
+		sb.append(", ");
+		sb.append(" alocar : ");
+		sb.append(alocar);
+		sb.append(", ");
+		sb.append(" concluido : ");
+		sb.append(concluido);
 		sb.append("} ");
 		return sb.toString();
 	}

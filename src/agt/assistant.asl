@@ -32,7 +32,9 @@
 +!sendToDatabase(result(Id, WasInformed, IsValid, Errors), Response)
 <-
 	
-	.send(database,assert, update(Id, Response)).
+	.send(database,assert,update(Id, Response));
+	.abolish(lastValidation(FirstId));
+	+lastValidation(Id).
 	
 +!analiseResult(result(Response), Resp)
 	: (Response == "Validation not received")
@@ -131,14 +133,36 @@
  * Allocation of Patients
  */
 
-+!allocPatients
++!allocPatients(Response) //By validation
+	: lastValidation(Id)
 <-
 	.print("Allocationg");
+	.send(database,assert,allocByValidation(Id));
+	.abolish(lastValidation(Id));
+	Response = "Ok, estou alocando os pacientes conforme solicitado";
 	.
+	
 +!allocPatients
 <-
-	.print("Cancellating");
+	.print("Canceling");
+	Response = "Desculpe, eu não tenho a informação relativa a validação, pode por favor solicitar uma nova validação?";
 	.
+	
++!dontAllocPatients(Response)
+	: lastValidation(Id)
+<-
+	.print("Canceling");
+	.send(database,assert,cancelAllocation(Id));
+	.abolish(lastValidation(Id));
+	Response = "Ok, estou cancelando conforme solicitado";
+	.
+	
++!dontAllocPatients
+<-
+	.print("Cancellating");
+	Response = "Desculpe, eu não tenho a informação relativa a validação.";
+	.	
+
 
 /* 
  * Kqml Plans
@@ -157,8 +181,9 @@
 		!getOptimisedAllocation.
 
 +!kqml_received(Sender,question,allocPatients,MsgId)
-	<-	.print("Agent ", Sender, " requesting confirmation of allocation.");
-		!allocPatients.
+	<-	.print("Agent ", Sender, " requesting confirmation of allocation."); // based on validation
+		!allocPatients(Response);
+		.send(operator,assert,Response).
 
 +!kqml_received(Sender,question,dontAllocPatients,MsgId)
 	<-	.print("Agent ", Sender, " requesting cancellation of allocation.");

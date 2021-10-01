@@ -29,13 +29,12 @@ public class FStoreArtifact extends Artifact {
 	}
 
 	@OPERATION
-	// aloca todos os leitos
 	void getOptimiserResult(OpFeedbackParam<OptimiserResult> response) {
 		response.set(this.optimiserResult);
 	}
 	
 	@OPERATION
-	// aloca todos os leitos
+	// sugere alocação para todos os leitos
 	void allocLeitos(OpFeedbackParam<Literal> response) {
 		if (aloc == null) init();
 		try {
