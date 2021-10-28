@@ -30,7 +30,7 @@ public class FirebaseDb {
 	private Gson gson = new Gson();
 
 	FirebaseDb(Firestore db) {
-		System.out.println("## FirebaseDb started ##");
+//		System.out.println("## FirebaseDb started ##");
 		this.db = db;
 	}
 
@@ -123,27 +123,29 @@ public class FirebaseDb {
 		return "Write result: " + result;
 	}
 
-	public static String addValidationResult(List<ResultVal> finalResult, boolean valido, String guid)
+	public static String addValidationResult(List<LaudosInternacao> laudos, boolean valido, String guid, String problem, String plan)
 			throws InterruptedException, ExecutionException {
 		Validacao val = new Validacao();
-		List<LaudosInternacao> laudos = new ArrayList<>();
-		for (ResultVal resultVal : finalResult) {
-			LaudosInternacao laudo = getLaudosInternacaoByIdPaciente(resultVal.getIdPaciente());
-			laudo.setLeito(getLeitoById(resultVal.getIdLeito()));
-			laudos.add(laudo);
-		}
+//		List<LaudosInternacao> laudos = new ArrayList<>();
+//		for (ResultVal resultVal : finalResult) {
+//			LaudosInternacao laudo = getLaudosInternacaoByIdPaciente(resultVal.getIdPaciente());
+//			laudo.setLeito(getLeitoById(resultVal.getIdLeito()));
+//			laudos.add(laudo);
+//		}
 		val.setPacientes(laudos);
 		val.setConcluido(false);
 		val.setSaveAt((new Date()).getTime());
 		val.setValido(valido);
 		val.setId(guid);
 		val.setAlocar(false);
+		val.setProblema(problem);
+		val.setPlano(plan);
 		
 		DocumentReference docRef = db.collection("validacoes").document(val.getId());
 		// (async) Update one field
 		ApiFuture<WriteResult> future = docRef.set(val);
 		WriteResult result = future.get();
-		System.out.println("Write result: " + result);
+//		System.out.println("Write result: " + result);
 		return "Write result: " + result;
 	}
 

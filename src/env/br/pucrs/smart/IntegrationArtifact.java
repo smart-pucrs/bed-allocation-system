@@ -45,6 +45,7 @@ public class IntegrationArtifact extends Artifact implements IAgent {
 	
 	@OPERATION
 	void replyWithContext(String response, OutputContexts context) {
+		System.out.println("[Dial4JaCa] Reply received from agent");
 		this.jasonResponse = response;
 		this.jasonOutputContext = context;
 	}
@@ -52,9 +53,10 @@ public class IntegrationArtifact extends Artifact implements IAgent {
 	@OPERATION
 	void reply(String response) {
 		if (this.awaitingResponse) {
+			System.out.println("[Dial4JaCa] Reply received from agent");
 			this.jasonResponse = response;
 		} else {
-			System.out.println("Reply arrived late");
+			System.out.println("[Dial4JaCa] Reply arrived late");
 		}
 	}
 	
@@ -78,9 +80,9 @@ public class IntegrationArtifact extends Artifact implements IAgent {
 			this.intentEvent = "";
 			if (intentName != null) {
 				execInternalOp("createRequestBelief", responseId, intentName, parameters, outputContexts, session);
-				System.out.println("Defining observable property");
+				System.out.println("[Dial4JaCa] Defining observable property");
 			} else {
-				System.out.println("Could not set observable property");
+				System.out.println("[Dial4JaCa] Could not set observable property");
 				response.setFulfillmentText("Unrecognized intent");
 			}
 		}
@@ -94,7 +96,7 @@ public class IntegrationArtifact extends Artifact implements IAgent {
 			}
 		}
 		if (this.jasonResponse != null) {
-			System.out.println("Agent jason's response: " + this.jasonResponse);
+			System.out.println("[Dial4JaCa] Agent jason's response: " + this.jasonResponse);
 			response.setFulfillmentText(this.jasonResponse);
 			if (this.jasonOutputContext != null) {
 				response.addOutputContexts(this.jasonOutputContext);
@@ -109,7 +111,8 @@ public class IntegrationArtifact extends Artifact implements IAgent {
 			this.generatedEvent = false;
 			this.intentEvent = "";
 		} else {
-			System.out.println("No response from agent jason");
+			System.out.println("[Dial4JaCa] No response from agent jason");
+			System.out.println("[Dial4JaCa] Sending an event to Dialogflow");
 			//response.setFulfillmentText("Sem resposta do agente");
 			FollowupEventInput newEvent = new FollowupEventInput();
 			newEvent.setName(removeSpaces(intentName));
@@ -158,7 +161,7 @@ public class IntegrationArtifact extends Artifact implements IAgent {
 		    	terms.add(l);
 		    } else {
 		    	
-		    	System.out.println("Parameter " + key + " value reported in unknown format" + value.getClass());
+		    	System.out.println("[Dial4JaCa] Parameter " + key + " value reported in unknown format" + value.getClass());
 		    }
 		}
 		return ASSyntax.createList(terms);

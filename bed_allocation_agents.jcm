@@ -6,7 +6,7 @@
 mas bed_allocation_agents {
 	
   	agent assistant:assistant.asl{
-		beliefs: url("https://explainable-agent.firebaseapp.com/page/optimised")
+		beliefs: url("https://explainable-agent.web.app/page/optimised")
     }    
 	agent optimiser:optimiser.asl{
     	focus: aloc

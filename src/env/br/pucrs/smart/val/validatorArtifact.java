@@ -160,11 +160,11 @@ public class validatorArtifact extends Artifact implements IValidator{
 	void createResultBelief(boolean isValid, UUID guid, List<ResultVal> finalResult) {
 
 //		System.out.println("### ---------------------------------- finalResult");
-		for (ResultVal r : finalResult) {
+//		for (ResultVal r : finalResult) {
 			
 //			System.out.println(r.toString());
-		}
-		defineObsProperty("result", guid.toString(), false, isValid, createMotiveBelief(finalResult));
+//		}
+		defineObsProperty("result", guid.toString(), false, isValid, createMotiveBelief(finalResult)); // result(Id, WasInformed, IsValid, Errors)
 	}
 	
 	ListTerm createMotiveBelief(List<ResultVal> finalResult) {
@@ -400,12 +400,14 @@ public class validatorArtifact extends Artifact implements IValidator{
 			}
 			resultVal.setNomePaciente(getPacienteName(resultVal.getIdPaciente()));
 			resultVal.setNumeroLeito(getLeitoNumber(resultVal.getIdLeito()));
+			System.out.println("ResultVal");
+			System.out.println(resultVal.toString());
 			finalResult.add(resultVal);
 		}
 		UUID guid = java.util.UUID.randomUUID();
 		execInternalOp("createResultBelief", pddl.goalAchieved(), guid, finalResult);
 		try {
-			FirebaseDb.addValidationResult(finalResult, pddl.goalAchieved(), guid.toString());
+			FirebaseDb.addValidationResult(this.laudos, pddl.goalAchieved(), guid.toString(), pddlStrings.getProblem(), pddlStrings.getPlan());
 			FirebaseDb.setTempAlocValidated(tempAloc.getId());
 		} catch (InterruptedException | ExecutionException e) {
 			// TODO Auto-generated catch block

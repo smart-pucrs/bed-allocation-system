@@ -27,7 +27,7 @@ public class FirebaseFirestoreReactive {
 	private Gson gson = new Gson();
 
 	FirebaseFirestoreReactive(Firestore db) {
-		System.out.println("## FirebaseFirestoreReactive started ##");
+//		System.out.println("## FirebaseFirestoreReactive started ##");
 		this.db = db;
 		observeData();
 
@@ -35,12 +35,12 @@ public class FirebaseFirestoreReactive {
 
 	public static void setListener(IValidator agent) {
 
-		System.out.println("## FirebaseFirestoreReactive setListener ##");
+//		System.out.println("## FirebaseFirestoreReactive setListener ##");
 		mas = agent;
 	}
 
 	void observeData() {
-		System.out.println("## observeData started ##");
+//		System.out.println("## observeData started ##");
 
 		db.collection("tempAloc").addSnapshotListener(new EventListener<QuerySnapshot>() {
 			@Override
@@ -90,10 +90,10 @@ public class FirebaseFirestoreReactive {
 					case ADDED:
 						String json1 = dc.getDocument().getData().toString();
 						JsonObject body1 = gson.fromJson(json1, JsonObject.class);
-						System.out.println("------------------New: " + body1);
+//						System.out.println("------------------New: " + body1);
 						break;
 					case REMOVED:
-						System.out.println("-------------------Removed: " + dc.getDocument().getData());
+//						System.out.println("-------------------Removed: " + dc.getDocument().getData());
 						break;
 					default:
 						break;

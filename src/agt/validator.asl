@@ -17,6 +17,8 @@
 	: result(Id, WasInformed, IsValid, Errors) & (WasInformed == false)
 <-
 	.print("Validation completed");
+	.print("result(Id, WasInformed, IsValid, Errors)");
+	.print(result(Id, WasInformed, IsValid, Errors));
 	Response = result(Id, WasInformed, IsValid, Errors);
 	.abolish(result(Id, WasInformed, IsValid, Errors));
 	.abolish(waiting);

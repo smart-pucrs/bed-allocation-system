@@ -39,8 +39,8 @@ public class FStoreArtifact extends Artifact {
 		if (aloc == null) init();
 		try {
 			this.optimiserResult = aloc.getOptimisationResult();
-			System.out.println("this.optimiserResult");
-			System.out.println(this.optimiserResult);
+//			System.out.println("this.optimiserResult");
+//			System.out.println(this.optimiserResult);
 			Literal optimiserBelief = createOptimiserBelief(this.optimiserResult);
 			System.out.println(optimiserBelief);
 			response.set(optimiserBelief);
@@ -115,13 +115,13 @@ public class FStoreArtifact extends Artifact {
 			for (Allocation aloc : op.getSugestedAllocation()) {
 				LaudosInternacao laudo = FirebaseDb.getLaudosInternacaoByIdPaciente(aloc.getIdPaciente());
 				if (laudo != null ) {
-				System.out.println(laudo.toString());
+//				System.out.println(laudo.toString());
 				
 					String num = aloc.getLeito();
-						System.out.println("Leito: " + num);
+//						System.out.println("Leito: " + num);
 						Leito le = FirebaseDb.getLeitoByNum(num);
 						if (le != null) {
-						System.out.println(le.toString());
+//						System.out.println(le.toString());
 						laudo.setLeito(le);
 						}
 
@@ -130,7 +130,7 @@ public class FStoreArtifact extends Artifact {
 			}
 		}
 		if (op.getNotAllocated() != null && !op.getNotAllocated().isEmpty()) {
-			System.out.println("entreou no segundo for");
+//			System.out.println("entreou no segundo for");
 			for (String id : op.getNotAllocated()) {
 				LaudosInternacao laudo = FirebaseDb.getLaudosInternacaoByIdPaciente(id);
 				optimiserResult.addLaudosData(laudo);

@@ -47,7 +47,7 @@ public class FStore extends DBConnect{
 	
 	//%PLACEHOLDER%
 	public FStore() throws IOException{
-		System.out.println("Construtor Fstore");
+//		System.out.println("Construtor Fstore");
 //		String credentials = "eexplainable-agent-firebase-adminsdk-u4w9g-4d5281c4dc.json";
 		String credentials = "src/resources/explainable-agent-d4391ab8fb68.json";
 		db = FirestoreOptions.getDefaultInstance().toBuilder()

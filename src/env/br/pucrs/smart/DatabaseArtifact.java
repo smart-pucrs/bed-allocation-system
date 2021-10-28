@@ -108,6 +108,7 @@ public class DatabaseArtifact extends Artifact {
 	@OPERATION
 	void allocByValidation(String id) {
 		try {
+			System.out.println("Allocating id " + id);
 			DocumentReference docRef = db.collection("validacoes").document(id);
 			// (async) Update one field
 			ApiFuture<WriteResult> future = docRef.update("alocar", true);
@@ -123,6 +124,7 @@ public class DatabaseArtifact extends Artifact {
 	@OPERATION
 	void cancelAllocation(String id) {
 		try {
+			System.out.println("Cancelling id " + id);
 			DocumentReference docRef = db.collection("validacoes").document(id);
 			// (async) Update one field
 			ApiFuture<WriteResult> future = docRef.update("concluido", true);

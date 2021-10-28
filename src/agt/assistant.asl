@@ -157,7 +157,7 @@
 	Response = "Ok, estou cancelando conforme solicitado";
 	.
 	
-+!dontAllocPatients
++!dontAllocPatients(Response)
 <-
 	.print("Cancellating");
 	Response = "Desculpe, eu não tenho a informação relativa a validação.";
@@ -187,7 +187,9 @@
 
 +!kqml_received(Sender,question,dontAllocPatients,MsgId)
 	<-	.print("Agent ", Sender, " requesting cancellation of allocation.");
-		!dontAllocPatients.
+		!dontAllocPatients(Response);
+		.send(operator,assert,Response);
+		.
 
 +!kqml_received(optimiser,assert,Result,MsgId)
 	<-	.print("Result received from agent optimiser"); // optimiserResult(IsAllAllocated,notAlloc([PacienteName]), sugestedAllocation([alloc(PacienteName, NumLeito)])) -> where IsAllAllocated is boolean

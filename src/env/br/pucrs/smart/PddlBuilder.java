@@ -17,6 +17,8 @@ public class PddlBuilder {
 	private Gson gson = new Gson();
 	
 	public PddlBuilder(List<LaudosInternacao> list) {
+//		System.out.println("PDDLBUILDER");
+//		System.out.println(list);
 		this.pacientes = (ArrayList<LaudosInternacao>) list;
 //		System.out.println("## PddlBuilder created ##");		
 	}
