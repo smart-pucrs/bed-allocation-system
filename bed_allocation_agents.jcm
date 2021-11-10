@@ -9,29 +9,28 @@ mas bed_allocation_agents {
 		beliefs: url("https://explainable-agent.web.app/page/optimised")
     }    
 	agent optimiser:optimiser.asl{
-    	focus: aloc
-    }
-  
+    	focus: optimiser
+    }  
+    
 	agent validator:validator.asl{
     	focus: pddl
     }
 
 	agent operator:communication_specialist.asl{
-    	focus: integration
+    	focus: dial4jaca
     }
 
 	agent database:database_specialist.asl{
-    	focus: database, aloc
+    	focus: database, optimiser
     }
     
 	workspace wp{
-        artifact aloc:br.pucrs.smart.FStoreArtifact
-		artifact integration:br.pucrs.smart.IntegrationArtifact
-		artifact database:br.pucrs.smart.DatabaseArtifact("src/resources/explainable-agent-d4391ab8fb68.json")
-		artifact pddl:br.pucrs.smart.val.validatorArtifact()
+        artifact optimiser:br.pucrs.smart.optimiser.OptimiserArtifact
+		artifact dial4jaca:br.pucrs.smart.Dial4JaCa.Dial4JaCaArtifact
+		artifact database:br.pucrs.smart.firestore.DatabaseArtifact("src/resources/explainable-agent-d4391ab8fb68.json")
+		artifact pddl:br.pucrs.smart.validator.validatorArtifact()
 	}
 	
-	platform: br.pucrs.smart.RestArtifact("--main 2181 --restPort 8080")
-//	platform: jacamo.web.JCMWeb("--main 2181 --restPort 8080")
+	platform: br.pucrs.smart.Dial4JaCa.RestArtifact("--main 2181 --restPort 8080")
 
 }

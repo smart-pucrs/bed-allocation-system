@@ -7,7 +7,7 @@
 !start.
 
 +result(Id, WasInformed, IsValid, Errors)
-<- .print("Validação concluída").
+<- .print("Validation completed").
 
 /* Plans */
 
@@ -16,7 +16,7 @@
 +!getValidationResult(Response)
 	: result(Id, WasInformed, IsValid, Errors) & (WasInformed == false)
 <-
-	.print("Validation completed");
+	.print("Validation received");
 	.print("result(Id, WasInformed, IsValid, Errors)");
 	.print(result(Id, WasInformed, IsValid, Errors));
 	Response = result(Id, WasInformed, IsValid, Errors);

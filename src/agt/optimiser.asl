@@ -8,18 +8,18 @@
 
 /* Plans */
 
-+!start : true <- .print("Optimiser agent enabled.").//; allocLeitos(R).
++!start : true <- .print("Optimiser agent enabled.").//; suggestOptimisedAllocation(R).
 
 +!getOptimisedAllocation(Response)
 <-
 	.print("Calling Optimiser.");
-	allocLeitos(Response); // optimiserResult(IsAllAlocated,notAlloc([PacienteName]), sugestedAllocation([alloc(PacienteName, NumLeito)])) -> where IsAllAlocated is boolean
+	suggestOptimisedAllocation(Response); // optimiserResult(IsAllAlocated,notAlloc([PacienteName]), sugestedAllocation([alloc(PacienteName, NumLeito)])) -> where IsAllAlocated is boolean
 	+Response;
 	.
 
 +!kqml_received(Sender,question,getOptimisedAllocation,MsgId)
 	<-	.print("Agent ", Sender, " requesting an optmised allocation.");
-		!getOptimisedAllocation(Response)
+		!getOptimisedAllocation(Response);
 		.send(Sender,assert,Response).
 
 { include("$jacamoJar/templates/common-cartago.asl") }
